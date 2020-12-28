@@ -124,6 +124,14 @@ namespace sdf
     /// \param[in] _color Emissive color.
     public: void SetEmissive(const ignition::math::Color &_color) const;
 
+    /// \brief Get render order
+    /// \return Render order
+    public: float RenderOrder() const;
+
+    /// \brief Set render order
+    /// \param[in] _renderOrder render order
+    public: void SetRenderOrder(const float _renderOrder);
+
     /// \brief Get whether dynamic lighting is enabled. The default
     /// value is true.
     /// \return False if dynamic lighting should be disabled.

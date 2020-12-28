@@ -122,6 +122,7 @@ TEST(DOMVisual, Material)
   EXPECT_EQ(ignition::math::Color(1.0f, 0.0f, 0.2f, 1.0f), mat->Emissive());
   EXPECT_FALSE(mat->Lighting());
   EXPECT_TRUE(mat->DoubleSided());
+  EXPECT_FLOAT_EQ(5.1f, mat->RenderOrder());
   EXPECT_EQ(sdf::ShaderType::VERTEX, mat->Shader());
   EXPECT_EQ("myuri", mat->ScriptUri());
   EXPECT_EQ("myname", mat->ScriptName());

@@ -57,6 +57,9 @@ class sdf::MaterialPrivate
   /// \brief Emissive color
   public: ignition::math::Color emissive {0, 0, 0, 1};
 
+  /// \brief Render order
+  public: float renderOrder = 0;
+
   /// \brief Physically Based Rendering (PBR) properties
   public: std::unique_ptr<Pbr> pbr;
 
@@ -89,6 +92,7 @@ Material::Material(const Material &_material)
   this->dataPtr->shader = _material.dataPtr->shader;
   this->dataPtr->normalMap = _material.dataPtr->normalMap;
   this->dataPtr->lighting = _material.dataPtr->lighting;
+  this->dataPtr->renderOrder = _material.dataPtr->renderOrder;
   this->dataPtr->doubleSided = _material.dataPtr->doubleSided;
   this->dataPtr->ambient = _material.dataPtr->ambient;
   this->dataPtr->diffuse = _material.dataPtr->diffuse;
@@ -207,6 +211,9 @@ Errors Material::Load(sdf::ElementPtr _sdf)
     }
   }
 
+  this->dataPtr->renderOrder = _sdf->Get<float>("render_order",
+      this->dataPtr->renderOrder).first;
+
   this->dataPtr->ambient = _sdf->Get<ignition::math::Color>("ambient",
       this->dataPtr->ambient).first;
 
@@ -282,6 +289,18 @@ ignition::math::Color Material::Emissive() const
 void Material::SetEmissive(const ignition::math::Color &_color) const
 {
   this->dataPtr->emissive = _color;
+}
+
+//////////////////////////////////////////////////
+float Material::RenderOrder() const
+{
+  return this->dataPtr->renderOrder;
+}
+
+//////////////////////////////////////////////////
+void Material::SetRenderOrder(const float _renderOrder)
+{
+  this->dataPtr->renderOrder = _renderOrder;
 }
 
 //////////////////////////////////////////////////

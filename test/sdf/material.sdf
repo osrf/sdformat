@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<sdf version="1.6">
+<sdf version="1.7">
   <model name="model">
     <link name="link">
       <visual name="visual1">
@@ -9,6 +9,7 @@
           <specular>0.7 0.3 0.5 0.9</specular>
           <emissive>1.0 0.0 0.2 1.0</emissive>
           <lighting>false</lighting>
+          <render_order>5.1</render_order>
           <double_sided>true</double_sided>
           <shader type="vertex">
           </shader>
