@@ -22,6 +22,7 @@
 #include "sdf/Altimeter.hh"
 #include "sdf/Camera.hh"
 #include "sdf/Error.hh"
+#include "sdf/Gps.hh"
 #include "sdf/Imu.hh"
 #include "sdf/Magnetometer.hh"
 #include "sdf/Lidar.hh"
@@ -78,6 +79,10 @@ class sdf::SensorPrivate
     {
       this->magnetometer = std::make_unique<sdf::Magnetometer>(
           *_sensor.magnetometer);
+    }
+    if (_sensor.gps)
+    {
+      this->gps = std::make_unique<sdf::Gps>(*_sensor.gps);
     }
     if (_sensor.altimeter)
     {
@@ -136,6 +141,9 @@ class sdf::SensorPrivate
 
   /// \brief Pointer to an altimeter.
   public: std::unique_ptr<Altimeter> altimeter;
+
+  /// \brief Pointer to GPS sensor.
+  public: std::unique_ptr<Gps> gps;
 
   /// \brief Pointer to an air pressure sensor.
   public: std::unique_ptr<AirPressure> airPressure;
@@ -221,6 +229,8 @@ bool Sensor::operator==(const Sensor &_sensor) const
       return *(this->dataPtr->airPressure) == *(_sensor.dataPtr->airPressure);
     case SensorType::IMU:
       return *(this->dataPtr->imu) == *(_sensor.dataPtr->imu);
+    case SensorType::GPS:
+      return *(this->dataPtr->gps) == *(_sensor.dataPtr->gps);
     case SensorType::CAMERA:
     case SensorType::DEPTH_CAMERA:
     case SensorType::RGBD_CAMERA:
@@ -343,6 +353,9 @@ Errors Sensor::Load(ElementPtr _sdf)
   else if (type == "gps")
   {
     this->dataPtr->type = SensorType::GPS;
+    this->dataPtr->gps.reset(new Gps());
+    Errors err = this->dataPtr->gps->Load(_sdf->GetElement("gps"));
+    errors.insert(errors.end(), err.begin(), err.end());
   }
   else if (type == "gpu_ray" || type == "gpu_lidar")
   {
@@ -600,6 +613,18 @@ void Sensor::SetCameraSensor(const Camera &_cam)
 const Camera *Sensor::CameraSensor() const
 {
   return this->dataPtr->camera.get();
+}
+
+/////////////////////////////////////////////////
+void Sensor::SetGpsSensor(const Gps &_gps)
+{
+  this->dataPtr->gps = std::make_unique<Gps>(_gps);
+}
+
+/////////////////////////////////////////////////
+const Gps *Sensor::GpsSensor() const
+{
+  return this->dataPtr->gps.get();
 }
 
 /////////////////////////////////////////////////
