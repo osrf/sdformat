@@ -37,33 +37,26 @@ TEST(DOMGps, Set)
   sdf::Noise noise;
   sdf::Noise defaultNoise;
 
-  //set random values and check they apply.
+  // set random values and check they apply.
   noise.SetMean(6.5);
   noise.SetStdDev(3.79);
 
   gps.SetVerticalPositionNoise(noise);
-  
   EXPECT_EQ(noise, gps.VerticalPositionNoise());
   EXPECT_EQ(defaultNoise, gps.HorizontalPositionNoise());
   EXPECT_EQ(defaultNoise, gps.VerticalVelocityNoise());
   EXPECT_EQ(defaultNoise, gps.HorizontalVelocityNoise());
-  
   gps.SetHorizontalPositionNoise(noise);
-  
   EXPECT_EQ(noise, gps.VerticalPositionNoise());
   EXPECT_EQ(noise, gps.HorizontalPositionNoise());
   EXPECT_EQ(defaultNoise, gps.VerticalVelocityNoise());
   EXPECT_EQ(defaultNoise, gps.HorizontalVelocityNoise());
-  
   gps.SetVerticalVelocityNoise(noise);
-  
   EXPECT_EQ(noise, gps.VerticalPositionNoise());
   EXPECT_EQ(noise, gps.HorizontalPositionNoise());
   EXPECT_EQ(noise, gps.VerticalVelocityNoise());
   EXPECT_EQ(defaultNoise, gps.HorizontalVelocityNoise());
-
   gps.SetHorizontalVelocityNoise(noise);
-  
   EXPECT_EQ(noise, gps.VerticalPositionNoise());
   EXPECT_EQ(noise, gps.HorizontalPositionNoise());
   EXPECT_EQ(noise, gps.VerticalVelocityNoise());
@@ -98,7 +91,6 @@ TEST(DOMGps, Set)
   // Test nullptr private class
   gpsCopied = gpsMoveAssigned;
   EXPECT_EQ(gpsAssigned, gpsCopied);
-
 }
 
 /////////////////////////////////////////////////
@@ -120,5 +112,4 @@ TEST(DOMGps, Load)
   ASSERT_EQ(1u, errors.size());
   EXPECT_EQ(sdf::ErrorCode::ELEMENT_INCORRECT_TYPE, errors[0].Code());
   EXPECT_NE(nullptr, gps.Element());
-
 }

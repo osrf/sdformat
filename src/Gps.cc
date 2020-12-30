@@ -112,20 +112,18 @@ Errors Gps::Load(ElementPtr _sdf)
   if (_sdf->HasElement("position_sensing"))
   {
     sdf::ElementPtr elem = _sdf->GetElement("position_sensing");
-
     if (elem->HasElement("horizontal"))
     {
       sdf::ElementPtr horiz = elem->GetElement("horizontal");
-      if(horiz->HasElement("noise"))
+      if (horiz->HasElement("noise"))
       {
       this->dataPtr->horizontalPositionNoise.Load(horiz->GetElement("noise"));
       }
     }
-
-    if (elem->HasElement("vertical")){
-
+    if (elem->HasElement("vertical"))
+    {
       sdf::ElementPtr vert = elem->GetElement("vertical");
-      if(vert->HasElement("noise"))
+      if (vert->HasElement("noise"))
       {
         this->dataPtr->verticalPositionNoise.Load(vert->GetElement("noise"));
       }
@@ -134,20 +132,18 @@ Errors Gps::Load(ElementPtr _sdf)
   if (_sdf->HasElement("velocity_sensing"))
   {
     sdf::ElementPtr elem = _sdf->GetElement("velocity_sensing");
-
-    if (elem->HasElement("horizontal")){
-
+    if (elem->HasElement("horizontal"))
+    {
       sdf::ElementPtr horiz = elem->GetElement("horizontal");
-      if(horiz->HasElement("noise"))
+      if (horiz->HasElement("noise"))
       {
         this->dataPtr->horizontalVelocityNoise.Load(horiz->GetElement("noise"));
       }
     }
-
-    if (elem->HasElement("vertical")){
-
+    if (elem->HasElement("vertical"))
+    {
       sdf::ElementPtr vert = elem->GetElement("vertical");
-      if(vert->HasElement("noise"))
+      if (vert->HasElement("noise"))
       {
         this->dataPtr->verticalVelocityNoise.Load(vert->GetElement("noise"));
       }
@@ -215,7 +211,6 @@ void Gps::SetVerticalVelocityNoise(const Noise &_noise)
 //////////////////////////////////////////////////
 bool Gps::operator==(const Gps &_gps) const
 {
-
   if (this->dataPtr->verticalPositionNoise != _gps.VerticalPositionNoise())
     return false;
   if (this->dataPtr->horizontalPositionNoise != _gps.HorizontalPositionNoise())
@@ -232,4 +227,4 @@ bool Gps::operator==(const Gps &_gps) const
 bool Gps::operator!=(const Gps &_gps) const
 {
   return !(*this == _gps);
-} 
+}
