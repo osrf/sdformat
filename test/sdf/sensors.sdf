@@ -143,6 +143,36 @@
 
       <sensor name="gps_sensor" type="gps">
         <pose>13 14 15 0 0 0</pose>
+        <gps>
+          <position_sensing>
+            <horizontal>
+              <noise type="gaussian">
+                  <mean>1.2</mean>
+                  <stddev>3.4</stddev>
+              </noise>
+            </horizontal>
+            <vertical>
+              <noise type="gaussian">
+                  <mean>5.6</mean>
+                  <stddev>7.8</stddev>
+              </noise>
+            </vertical>
+          </position_sensing>
+          <velocity_sensing>
+            <horizontal>
+              <noise type="gaussian">
+                  <mean>9.1</mean>
+                  <stddev>10.11</stddev>
+              </noise>
+            </horizontal>
+            <vertical>
+              <noise type="gaussian">
+                  <mean>12.13</mean>
+                  <stddev>14.15</stddev>
+              </noise>
+            </vertical>
+          </velocity_sensing>
+        </gps>
       </sensor>
 
       <sensor name="gpu_ray_sensor" type="gpu_ray">

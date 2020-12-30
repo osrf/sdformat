@@ -39,22 +39,38 @@ namespace sdf
   ///
   /// ~~~{.xml}
   /// <sensor name="gps_sensor" type="gps">
-  ///     <pose>1 2 3 0 0 0</pose>
-  ///     <topic>/gps</topic>
-  ///     <gps>
-  ///       <position_sense>
+  ///   <pose>1 2 3 0 0 0</pose>
+  ///   <topic>/gps</topic>
+  ///   <gps>
+  ///     <position_sensing>
+  ///       <horizontal>
   ///         <noise type="gaussian">
   ///             <mean>0.98</mean>
   ///             <stddev>0.76</stddev>
   ///         </noise>
-  ///       </position_sense>
-  ///       <velocity_sense>
+  ///       </horizontal>
+  ///       <vertical>
   ///         <noise type="gaussian">
   ///             <mean>0.98</mean>
   ///             <stddev>0.76</stddev>
   ///         </noise>
-  ///       </velocity_sense> 
-  ///     </gps>
+  ///       </vertical>
+  ///     </position_sensing>
+  ///     <velocity_sensing>
+  ///       <horizontal>
+  ///         <noise type="gaussian">
+  ///             <mean>0.98</mean>
+  ///             <stddev>0.76</stddev>
+  ///         </noise>
+  ///       </horizontal>
+  ///       <vertical>
+  ///         <noise type="gaussian">
+  ///             <mean>0.98</mean>
+  ///             <stddev>0.76</stddev>
+  ///         </noise>
+  ///       </vertical>
+  ///     </velocity_sensing>
+  ///   </gps>
   /// </sensor>
   /// ~~~
   class SDFORMAT_VISIBLE Gps
@@ -97,21 +113,37 @@ namespace sdf
     /// not been called.
     public: sdf::ElementPtr Element() const;
 
-    /// \brief Get the noise values for the position component of the gps sensor.
-    /// \return Noise values for the position sensor.
-    public: const Noise &PositionNoise() const;
+    /// \brief Set the noise values for the horizontal position sensor
+    /// \param[in] _noise Noise values to set to
+    public: void SetHorizontalPositionNoise(const Noise &_noise);
 
-    /// \brief Set the noise values for the position component of the gps sensor.
-    /// \param[in] _noise Noise values for the position sensor.
-    public: void SetPositionNoise(const Noise &_noise);
+    /// \brief Get noise value for horizontal position sensor
+    /// \return Noise values
+    public: const Noise &HorizontalPositionNoise() const;
 
-    /// \brief Get the noise values for the velocity component of the gps sensor.
-    /// \return Noise values for the velocity sensor.
-    public: const Noise &VelocityNoise() const;
+    /// \brief Set the noise values for the vertical position sensor
+    /// \param[in] _noise Noise values to set to
+    public: void SetVerticalPositionNoise(const Noise &_noise);
 
-    /// \brief Set the noise values for the velocity component of the gps sensor.
-    /// \param[in] _noise Noise values for the velocity sensor.
-    public: void SetVelocityNoise(const Noise &_noise);
+    /// \brief Get noise value for vertical position sensor
+    /// \return Noise values
+    public: const Noise &VerticalPositionNoise() const;
+
+    /// \brief Set the noise values for the horizontal velocity sensor
+    /// \param[in] _noise Noise values to set to
+    public: void SetHorizontalVelocityNoise(const Noise &_noise);
+
+    /// \brief Get noise value for horizontal velocity sensor
+    /// \return Noise values
+    public: const Noise &HorizontalVelocityNoise() const;
+
+    /// \brief Set the noise values for the vertical velocity sensor
+    /// \param[in] _noise Noise values to set to
+    public: void SetVerticalVelocityNoise(const Noise &_noise);
+
+    /// \brief Get noise value for vertical velocity sensor
+    /// \return Noise values
+    public: const Noise &VerticalVelocityNoise() const;
 
     /// \brief Return true if both Gps objects contain the same values.
     /// \param[_in] _gps Gps value to compare.

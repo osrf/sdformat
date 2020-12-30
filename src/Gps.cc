@@ -22,11 +22,17 @@ using namespace ignition;
 /// \brief Private gps data.
 class sdf::GpsPrivate
 {
-  /// \brief Noise values for the positioning component of the gps sensor
-  public: Noise positionNoise;
+  /// \brief Noise values for the horizontal positioning sensor
+  public: Noise horizontalPositionNoise;
 
-  /// \brief Noise values for the velocity component of the gps sensor
-  public: Noise velocityNoise;
+  /// \brief Noise values for the vertical positioning sensor
+  public: Noise verticalPositionNoise;
+
+  /// \brief Noise values for the horizontal velocity sensor
+  public: Noise horizontalVelocityNoise;
+
+  /// \brief Noise values for the verical velocity sensor
+  public: Noise verticalVelocityNoise;
 
   /// \brief The SDF element pointer used during load.
   public: sdf::ElementPtr sdf{nullptr};
@@ -103,20 +109,51 @@ Errors Gps::Load(ElementPtr _sdf)
   }
 
   // Load gps sensor properties
-  if (_sdf->HasElement("position_sense"))
+  if (_sdf->HasElement("position_sensing"))
   {
-    sdf::ElementPtr elem = _sdf->GetElement("position_sense");
-    if (elem->HasElement("noise"))
-      this->dataPtr->positionNoise.Load(elem->GetElement("noise"));
+    sdf::ElementPtr elem = _sdf->GetElement("position_sensing");
 
+    if (elem->HasElement("horizontal"))
+    {
+      sdf::ElementPtr horiz = elem->GetElement("horizontal");
+      if(horiz->HasElement("noise"))
+      {
+      this->dataPtr->horizontalPositionNoise.Load(horiz->GetElement("noise"));
+      }
+    }
+
+    if (elem->HasElement("vertical")){
+
+      sdf::ElementPtr vert = elem->GetElement("vertical");
+      if(vert->HasElement("noise"))
+      {
+        this->dataPtr->verticalPositionNoise.Load(vert->GetElement("noise"));
+      }
+    }
+  }
+  if (_sdf->HasElement("velocity_sensing"))
+  {
+    sdf::ElementPtr elem = _sdf->GetElement("velocity_sensing");
+
+    if (elem->HasElement("horizontal")){
+
+      sdf::ElementPtr horiz = elem->GetElement("horizontal");
+      if(horiz->HasElement("noise"))
+      {
+        this->dataPtr->horizontalVelocityNoise.Load(horiz->GetElement("noise"));
+      }
+    }
+
+    if (elem->HasElement("vertical")){
+
+      sdf::ElementPtr vert = elem->GetElement("vertical");
+      if(vert->HasElement("noise"))
+      {
+        this->dataPtr->verticalVelocityNoise.Load(vert->GetElement("noise"));
+      }
+    }
   }
 
-  if (_sdf->HasElement("velocity_sense"))
-  {
-    sdf::ElementPtr elem = _sdf->GetElement("velocity_sense");
-    if (elem->HasElement("noise"))
-      this->dataPtr->velocityNoise.Load(elem->GetElement("noise"));
-  }
 
   return errors;
 }
@@ -128,37 +165,64 @@ sdf::ElementPtr Gps::Element() const
 }
 
 //////////////////////////////////////////////////
-const Noise &Gps::PositionNoise() const
+const Noise &Gps::HorizontalPositionNoise() const
 {
-  return this->dataPtr->positionNoise;
+  return this->dataPtr->horizontalPositionNoise;
 }
 
 //////////////////////////////////////////////////
-void Gps::SetPositionNoise(const Noise &_noise)
+void Gps::SetHorizontalPositionNoise(const Noise &_noise)
 {
-  this->dataPtr->positionNoise = _noise;
+  this->dataPtr->horizontalPositionNoise = _noise;
 }
 
 //////////////////////////////////////////////////
-const Noise &Gps::VelocityNoise() const
+const Noise &Gps::HorizontalVelocityNoise() const
 {
-  return this->dataPtr->velocityNoise;
+  return this->dataPtr->horizontalVelocityNoise;
 }
 
 //////////////////////////////////////////////////
-void Gps::SetVelocityNoise(const Noise &_noise)
+void Gps::SetHorizontalVelocityNoise(const Noise &_noise)
 {
-  this->dataPtr->velocityNoise = _noise;
+  this->dataPtr->horizontalVelocityNoise = _noise;
+}
+
+//////////////////////////////////////////////////
+const Noise &Gps::VerticalPositionNoise() const
+{
+  return this->dataPtr->verticalPositionNoise;
+}
+
+//////////////////////////////////////////////////
+void Gps::SetVerticalPositionNoise(const Noise &_noise)
+{
+  this->dataPtr->verticalPositionNoise = _noise;
+}
+
+//////////////////////////////////////////////////
+const Noise &Gps::VerticalVelocityNoise() const
+{
+  return this->dataPtr->verticalVelocityNoise;
+}
+
+//////////////////////////////////////////////////
+void Gps::SetVerticalVelocityNoise(const Noise &_noise)
+{
+  this->dataPtr->verticalVelocityNoise = _noise;
 }
 
 //////////////////////////////////////////////////
 bool Gps::operator==(const Gps &_gps) const
 {
 
-  if (this->dataPtr->positionNoise != _gps.PositionNoise())
+  if (this->dataPtr->verticalPositionNoise != _gps.VerticalPositionNoise())
     return false;
-
-  if (this->dataPtr->velocityNoise != _gps.VelocityNoise())
+  if (this->dataPtr->horizontalPositionNoise != _gps.HorizontalPositionNoise())
+    return false;
+  if (this->dataPtr->verticalVelocityNoise != _gps.VerticalVelocityNoise())
+    return false;
+  if (this->dataPtr->horizontalVelocityNoise != _gps.HorizontalVelocityNoise())
     return false;
 
   return true;

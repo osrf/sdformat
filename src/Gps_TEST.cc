@@ -23,35 +23,51 @@ TEST(DOMGps, Construction)
 {
   sdf::Gps gps;
   sdf::Noise defaultNoise;
-  EXPECT_EQ(defaultNoise, gps.PositionNoise());
-  EXPECT_EQ(defaultNoise, gps.VelocityNoise());
+  EXPECT_EQ(defaultNoise, gps.VerticalPositionNoise());
+  EXPECT_EQ(defaultNoise, gps.HorizontalPositionNoise());
+  EXPECT_EQ(defaultNoise, gps.VerticalVelocityNoise());
+  EXPECT_EQ(defaultNoise, gps.HorizontalVelocityNoise());
 }
 
 /////////////////////////////////////////////////
 TEST(DOMGps, Set)
 {
   sdf::Gps gps;
-  sdf::Noise noise;
 
+  sdf::Noise noise;
+  sdf::Noise defaultNoise;
+
+  //set random values and check they apply.
   noise.SetMean(6.5);
   noise.SetStdDev(3.79);
 
-  gps.SetPositionNoise(noise);
-  gps.SetVelocityNoise(noise);
+  gps.SetVerticalPositionNoise(noise);
+  
+  EXPECT_EQ(noise, gps.VerticalPositionNoise());
+  EXPECT_EQ(defaultNoise, gps.HorizontalPositionNoise());
+  EXPECT_EQ(defaultNoise, gps.VerticalVelocityNoise());
+  EXPECT_EQ(defaultNoise, gps.HorizontalVelocityNoise());
+  
+  gps.SetHorizontalPositionNoise(noise);
+  
+  EXPECT_EQ(noise, gps.VerticalPositionNoise());
+  EXPECT_EQ(noise, gps.HorizontalPositionNoise());
+  EXPECT_EQ(defaultNoise, gps.VerticalVelocityNoise());
+  EXPECT_EQ(defaultNoise, gps.HorizontalVelocityNoise());
+  
+  gps.SetVerticalVelocityNoise(noise);
+  
+  EXPECT_EQ(noise, gps.VerticalPositionNoise());
+  EXPECT_EQ(noise, gps.HorizontalPositionNoise());
+  EXPECT_EQ(noise, gps.VerticalVelocityNoise());
+  EXPECT_EQ(defaultNoise, gps.HorizontalVelocityNoise());
 
-  EXPECT_EQ(noise, gps.PositionNoise());
-  EXPECT_EQ(noise, gps.VelocityNoise());
-
-  sdf::Noise vnoise;
-  vnoise.SetMean(1.2);
-  vnoise.SetStdDev(2.44);
-
-  gps.SetVelocityNoise(vnoise);
-
-  // Test seperate noise profiles pos/vel
-  EXPECT_EQ(vnoise, gps.VelocityNoise());
-  EXPECT_NE(vnoise, gps.PositionNoise());
-  EXPECT_EQ(noise, gps.PositionNoise());
+  gps.SetHorizontalVelocityNoise(noise);
+  
+  EXPECT_EQ(noise, gps.VerticalPositionNoise());
+  EXPECT_EQ(noise, gps.HorizontalPositionNoise());
+  EXPECT_EQ(noise, gps.VerticalVelocityNoise());
+  EXPECT_EQ(noise, gps.HorizontalVelocityNoise());
 
   // Inequality operator
   sdf::Gps gps2;
