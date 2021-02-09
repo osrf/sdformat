@@ -63,8 +63,7 @@ TEST(DOMModel, NoName)
 TEST(DOMModel, NoLinks)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "model_without_links.sdf");
+    sdf::testing::TestFile("sdf", "model_without_links.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -85,8 +84,7 @@ TEST(DOMModel, NoLinks)
 TEST(DOMRoot, LoadLinkCheck)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "empty.sdf");
+    sdf::testing::TestFile("sdf", "empty.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -114,8 +112,7 @@ TEST(DOMRoot, LoadLinkCheck)
 TEST(DOMRoot, LoadDoublePendulum)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "double_pendulum.sdf");
+    sdf::testing::TestFile("sdf", "double_pendulum.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -150,8 +147,7 @@ TEST(DOMRoot, LoadDoublePendulum)
 TEST(DOMRoot, NestedModel)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "nested_model.sdf");
+    sdf::testing::TestFile("sdf", "nested_model.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -203,7 +199,7 @@ TEST(DOMRoot, NestedModel)
 TEST(DOMLink, NestedModelPoseRelativeTo)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
+    sdf::testing::TestFile("sdf",
         "model_nested_model_relative_to.sdf");
 
   // Load the SDF file
@@ -286,8 +282,7 @@ TEST(DOMLink, NestedModelPoseRelativeTo)
 TEST(DOMRoot, LoadCanonicalLink)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "model_canonical_link.sdf");
+    sdf::testing::TestFile("sdf", "model_canonical_link.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -328,8 +323,7 @@ TEST(DOMRoot, LoadCanonicalLink)
 TEST(DOMRoot, LoadNestedCanonicalLink)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "nested_canonical_link.sdf");
+    sdf::testing::TestFile("sdf", "nested_canonical_link.sdf");
 
   // Load the SDF file
   sdf::Root root;

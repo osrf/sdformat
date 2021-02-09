@@ -63,8 +63,7 @@ TEST(DOMJoint, NoName)
 TEST(DOMJoint, DoublePendulum)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "double_pendulum.sdf");
+    sdf::testing::TestFile("sdf", "double_pendulum.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -117,8 +116,7 @@ TEST(DOMJoint, DoublePendulum)
 TEST(DOMJoint, Complete)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "joint_complete.sdf");
+    sdf::testing::TestFile("sdf", "joint_complete.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -160,8 +158,7 @@ TEST(DOMJoint, Complete)
 TEST(DOMJoint, LoadJointParentWorld)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "joint_parent_world.sdf");
+    sdf::testing::TestFile("sdf", "joint_parent_world.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -204,8 +201,7 @@ TEST(DOMJoint, LoadJointParentWorld)
 TEST(DOMJoint, LoadInvalidJointChildWorld)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "joint_child_world.sdf");
+    sdf::testing::TestFile("sdf", "joint_child_world.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -229,8 +225,7 @@ TEST(DOMJoint, LoadInvalidJointChildWorld)
 TEST(DOMJoint, LoadJointPoseRelativeTo)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "model_joint_relative_to.sdf");
+    sdf::testing::TestFile("sdf", "model_joint_relative_to.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -324,7 +319,7 @@ TEST(DOMJoint, LoadJointPoseRelativeTo)
 TEST(DOMJoint, LoadInvalidJointPoseRelativeTo)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
+    sdf::testing::TestFile("sdf",
         "model_invalid_joint_relative_to.sdf");
 
   // Load the SDF file
@@ -353,8 +348,7 @@ TEST(DOMJoint, LoadInvalidJointPoseRelativeTo)
 TEST(DOMJoint, LoadInvalidChild)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "joint_invalid_child.sdf");
+    sdf::testing::TestFile("sdf", "joint_invalid_child.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -383,7 +377,7 @@ TEST(DOMJoint, LoadInvalidChild)
 TEST(DOMJoint, LoadLinkJointSameName17Invalid)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
+    sdf::testing::TestFile("sdf",
         "model_link_joint_same_name.sdf");
 
   // Read with sdf::readFile, which converts from 1.6 to latest
@@ -414,8 +408,7 @@ TEST(DOMJoint, LoadLinkJointSameName17Invalid)
 TEST(DOMJoint, LoadLinkJointSameName16Valid)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "model_link_joint_same_name.sdf");
+    sdf::testing::TestFile("sdf", "model_link_joint_same_name.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -493,8 +486,7 @@ TEST(DOMJoint, LoadLinkJointSameName16Valid)
 TEST(DOMJoint, LoadURDFJointPoseRelativeTo)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "integration",
-        "provide_feedback.urdf");
+    sdf::testing::TestFile("integration", "provide_feedback.urdf");
 
   // Load the SDF file
   sdf::Root root;

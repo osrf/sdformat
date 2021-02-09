@@ -24,12 +24,10 @@
 #include "test_config.h"
 
 const std::string SDF_FIXED_JNT =
-  sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "integration",
-                          "fixed_joint_reduction.urdf");
+  sdf::testing::TestFile("integration", "fixed_joint_reduction.urdf");
 
 const std::string SDF_FIXED_JNT_NO_LUMPING =
-  sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "integration",
-                          "fixed_joint_reduction_disabled.urdf");
+  sdf::testing::TestFile("integration", "fixed_joint_reduction_disabled.urdf");
 
 /////////////////////////////////////////////////
 bool findJointInModel(const std::string &desired_joint_name, sdf::SDFPtr robot)

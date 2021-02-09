@@ -73,8 +73,7 @@ TEST(DOMLink, NoName)
 TEST(DOMLink, LoadVisualCollision)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "empty.sdf");
+    sdf::testing::TestFile("sdf", "empty.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -116,8 +115,7 @@ TEST(DOMLink, LoadVisualCollision)
 TEST(DOMLink, InertialDoublePendulum)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "double_pendulum.sdf");
+    sdf::testing::TestFile("sdf", "double_pendulum.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -171,8 +169,7 @@ TEST(DOMLink, InertialDoublePendulum)
 TEST(DOMLink, InertialComplete)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "inertial_complete.sdf");
+    sdf::testing::TestFile("sdf", "inertial_complete.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -203,8 +200,7 @@ TEST(DOMLink, InertialComplete)
 TEST(DOMLink, InertialInvalid)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "inertial_invalid.sdf");
+    sdf::testing::TestFile("sdf", "inertial_invalid.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -228,9 +224,7 @@ TEST(DOMLink, InertialInvalid)
 //////////////////////////////////////////////////
 TEST(DOMLink, Sensors)
 {
-  const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "sensors.sdf");
+  const std::string testFile = sdf::testing::TestFile("sdf", "sensors.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -592,8 +586,7 @@ TEST(DOMLink, Sensors)
 /////////////////////////////////////////////////
 TEST(DOMLink, LoadLinkPoseRelativeTo)
 {
-  const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
+  const std::string testFile = sdf::testing::TestFile("sdf",
         "model_link_relative_to.sdf");
 
   // Load the SDF file
@@ -669,8 +662,7 @@ TEST(DOMLink, LoadLinkPoseRelativeTo)
 /////////////////////////////////////////////////
 TEST(DOMLink, LoadInvalidLinkPoseRelativeTo)
 {
-  const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
+  const std::string testFile = sdf::testing::TestFile("sdf",
         "model_invalid_link_relative_to.sdf");
 
   // Load the SDF file

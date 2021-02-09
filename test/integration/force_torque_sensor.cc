@@ -24,8 +24,7 @@
 #include "test_config.h"
 
 const std::string SDF_TEST_FILE =
-  sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "integration",
-                          "force_torque_sensor.urdf");
+  sdf::testing::TestFile("integration", "force_torque_sensor.urdf");
 
 /////////////////////////////////////////////////
 TEST(SDFParser, ForceTorqueSensorTest)

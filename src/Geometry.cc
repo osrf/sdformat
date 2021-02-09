@@ -17,6 +17,7 @@
 #include "sdf/Geometry.hh"
 #include "sdf/Box.hh"
 #include "sdf/Cylinder.hh"
+#include "sdf/Heightmap.hh"
 #include "sdf/Mesh.hh"
 #include "sdf/Plane.hh"
 #include "sdf/Sphere.hh"
@@ -43,6 +44,9 @@ class sdf::GeometryPrivate
 
   /// \brief Pointer to a mesh.
   public: std::unique_ptr<Mesh> mesh;
+
+  /// \brief Pointer to a heightmap.
+  public: std::unique_ptr<Heightmap> heightmap;
 
   /// \brief The SDF element pointer used during load.
   public: sdf::ElementPtr sdf;
@@ -93,6 +97,12 @@ Geometry::Geometry(const Geometry &_geometry)
   if (_geometry.dataPtr->mesh)
   {
     this->dataPtr->mesh = std::make_unique<sdf::Mesh>(*_geometry.dataPtr->mesh);
+  }
+
+  if (_geometry.dataPtr->heightmap)
+  {
+    this->dataPtr->heightmap =
+        std::make_unique<sdf::Heightmap>(*_geometry.dataPtr->heightmap);
   }
 
   this->dataPtr->sdf = _geometry.dataPtr->sdf;
@@ -178,6 +188,13 @@ Errors Geometry::Load(ElementPtr _sdf)
     Errors err = this->dataPtr->mesh->Load(_sdf->GetElement("mesh"));
     errors.insert(errors.end(), err.begin(), err.end());
   }
+  else if (_sdf->HasElement("heightmap"))
+  {
+    this->dataPtr->type = GeometryType::HEIGHTMAP;
+    this->dataPtr->heightmap.reset(new Heightmap());
+    Errors err = this->dataPtr->heightmap->Load(_sdf->GetElement("heightmap"));
+    errors.insert(errors.end(), err.begin(), err.end());
+  }
 
   return errors;
 }
@@ -252,6 +269,18 @@ const Mesh *Geometry::MeshShape() const
 void Geometry::SetMeshShape(const Mesh &_mesh)
 {
   this->dataPtr->mesh = std::make_unique<Mesh>(_mesh);
+}
+
+/////////////////////////////////////////////////
+const Heightmap *Geometry::HeightmapShape() const
+{
+  return this->dataPtr->heightmap.get();
+}
+
+/////////////////////////////////////////////////
+void Geometry::SetHeightmapShape(const Heightmap &_heightmap)
+{
+  this->dataPtr->heightmap = std::make_unique<Heightmap>(_heightmap);
 }
 
 /////////////////////////////////////////////////

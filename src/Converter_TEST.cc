@@ -1899,9 +1899,9 @@ TEST(Converter, MuchNewerVersion)
 }
 
 const std::string CONVERT_DOC_15_16 =
-  sdf::filesystem::append(PROJECT_SOURCE_PATH, "sdf", "1.6", "1_5.convert");
+  sdf::testing::SourceFile("sdf", "1.6", "1_5.convert");
 const std::string CONVERT_DOC_16_17 =
-  sdf::filesystem::append(PROJECT_SOURCE_PATH, "sdf", "1.7", "1_6.convert");
+  sdf::testing::SourceFile("sdf", "1.7", "1_6.convert");
 
 /////////////////////////////////////////////////
 /// Test conversion of imu in 1.5 to 1.6

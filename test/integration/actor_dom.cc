@@ -31,8 +31,7 @@
 TEST(DOMActor, LoadActors)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "world_complete.sdf");
+    sdf::testing::TestFile("sdf", "world_complete.sdf");
 
   sdf::Root root;
   sdf::Errors errors = root.Load(testFile);
@@ -145,8 +144,7 @@ TEST(DOMActor, CopySdfLoadedProperties)
   // Verify that copying an actor also copies the underlying ElementPtr
   // Joints and Links
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "world_complete.sdf");
+    sdf::testing::TestFile("sdf", "world_complete.sdf");
 
   sdf::Root root;
   sdf::Errors errors = root.Load(testFile);

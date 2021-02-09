@@ -29,8 +29,7 @@
 TEST(Include, IncludeDescription)
 {
   const std::string SDF_DESCRIPTION_PATH =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "integration",
-                            "include_description.sdf");
+    sdf::testing::TestFile("integration", "include_description.sdf");
 
   std::ostringstream stream;
   std::string version = SDF_VERSION;

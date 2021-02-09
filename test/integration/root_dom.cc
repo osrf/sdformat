@@ -30,8 +30,7 @@
 TEST(DOMRoot, InvalidSDF)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "empty_invalid.sdf");
+    sdf::testing::TestFile("sdf", "empty_invalid.sdf");
 
   sdf::Root root;
   sdf::Errors errors = root.Load(testFile);
@@ -43,8 +42,7 @@ TEST(DOMRoot, InvalidSDF)
 TEST(DOMRoot, NoVersion)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "empty_noversion.sdf");
+    sdf::testing::TestFile("sdf", "empty_noversion.sdf");
 
   sdf::Root root;
   sdf::Errors errors = root.Load(testFile);
@@ -56,8 +54,7 @@ TEST(DOMRoot, NoVersion)
 TEST(DOMRoot, Load)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "empty.sdf");
+    sdf::testing::TestFile("sdf", "empty.sdf");
 
   sdf::Root root;
   EXPECT_EQ(0u, root.WorldCount());
@@ -79,8 +76,7 @@ TEST(DOMRoot, Load)
 TEST(DOMRoot, LoadMultipleModels)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "root_multiple_models.sdf");
+    sdf::testing::TestFile("sdf", "root_multiple_models.sdf");
 
   sdf::Root root;
   EXPECT_TRUE(root.Load(testFile).empty());
@@ -100,8 +96,7 @@ TEST(DOMRoot, LoadMultipleModels)
 TEST(DOMRoot, LoadDuplicateModels)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "root_duplicate_models.sdf");
+    sdf::testing::TestFile("sdf", "root_duplicate_models.sdf");
 
   sdf::Root root;
   sdf::Errors errors = root.Load(testFile);

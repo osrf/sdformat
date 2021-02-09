@@ -25,27 +25,104 @@
 #define PROJECT_SOURCE_PATH "${PROJECT_SOURCE_DIR}"
 #define PROJECT_BINARY_DIR  "${CMAKE_BINARY_DIR}"
 #define SDF_PROTOCOL_VERSION "${SDF_PROTOCOL_VERSION}"
+#define SDF_TMP_DIR "tmp-sdf/"
 
-/*
- * setenv/unstenv are not present in Windows. Define them to make the code
- * portable
- */
-#if (_MSC_VER >= 1400) // Visual Studio 2005
-#include <sstream>
+#include "env.hh"
 
-int setenv(const char * name, const char * value, int /*rewrite*/)
+#include <sdf/Filesystem.hh>
+namespace sdf
 {
-  std::stringstream sstr;
-  sstr << *name << '=' << value;
-  return _putenv(sstr.str().c_str());
-}
+  namespace testing
+  {
+    /// \brief Method to retrieve root directory of project source
+    ///
+    /// This is used to get various test files
+    /// \param[inout] _sourceDir Full path to the source directory
+    /// \return True if directory is set correctly, false otherwise
+    bool ProjectSourcePath(std::string &_sourceDir)
+    {
+      // Bazel builds set TEST_SRCDIR
+      if(env("TEST_SRCDIR", _sourceDir))
+      {
+        _sourceDir = sdf::filesystem::append(
+            _sourceDir, "__main__", "sdformat");
+        return true;
+      }
+      else
+      {
+        // CMake builds set PROJECT_SOURCE_PATH
+        _sourceDir = PROJECT_SOURCE_PATH;
+        return true;
+      }
 
-void unsetenv(const char * name)
-{
-  std::stringstream sstr;
-  sstr << *name << '=';
-  _putenv(sstr.str().c_str());
-  return;
-}
+      return false;
+    }
+
+    /// \brief Method to retrieve temporary directory for test outputs
+    ///
+    /// \param[inout] _tmpDir Full path to the temp directory
+    /// \return True if directory is set correctly, false otherwise
+    bool TestTmpPath(std::string &_tmpDir)
+    {
+      // Bazel builds set TEST_UNDECLARED_OUTPUTS_DIR
+      if (env("TEST_UNDECLARED_OUTPUTS_DIR", _tmpDir))
+      {
+        return true;
+      }
+      else
+      {
+        _tmpDir = sdf::filesystem::append(PROJECT_BINARY_DIR, SDF_TMP_DIR);
+        return true;
+      }
+    }
+
+    /// \brief Method to retrieve temporary home directory for tests
+    ///
+    /// This will update the contents of the home directory path variable
+    /// (HOME on Linux/MacOS, HOMEPATH on Windows) to this newly-set
+    /// directory
+    /// This additionally sets the HOME and HOMEPATH environment variables
+    ///
+    /// \param[inout] _homeDir Full path to the home directory
+    /// \return True if directory is set correctly, false otherwise
+    bool TestSetHomePath(std::string &_homeDir)
+    {
+      if (env("TEST_UNDECLARED_OUTPUTS_DIR", _homeDir)) 
+      {
+        return true;
+      } 
+      else
+      {
+        _homeDir = PROJECT_BINARY_DIR;
+        // Set both for linux and windows
+        return setenv("HOME", _homeDir) && setenv("HOMEPATH", _homeDir);
+      }
+    }
+
+    /// \brief Retrieve a file from the project source directory
+    /// \param[in] variable length of arguments relative to the
+    ///   repository source directory
+    /// \return Full path to requested file
+    template <typename... Args>
+    std::string SourceFile(Args const &... args)
+    {
+      std::string dataDir;
+      ProjectSourcePath(dataDir);
+      return sdf::filesystem::append(dataDir, args...);
+    }
+
+    /// \brief Retrieve a file from the test directory
+    /// \param[in] variable length of arguments relative to the
+    ///   repository test directory
+    /// \return Full path to requested test file
+    template <typename... Args>
+    std::string TestFile(Args const &... args)
+    {
+      return SourceFile("test", args...);
+    }
+
+  }  // namespace testing
+}  // namespace sdf
+
 #endif
-#endif
+

@@ -64,8 +64,7 @@ TEST(DOMVisual, NoName)
 TEST(DOMVisual, DoublePendulum)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "double_pendulum.sdf");
+    sdf::testing::TestFile("sdf", "double_pendulum.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -97,8 +96,7 @@ TEST(DOMVisual, DoublePendulum)
 TEST(DOMVisual, Material)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "material.sdf");
+    sdf::testing::TestFile("sdf", "material.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -147,8 +145,7 @@ TEST(DOMVisual, Material)
 TEST(DOMVisual, MaterialScriptNoUri)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "material_script_no_uri.sdf");
+    sdf::testing::TestFile("sdf", "material_script_no_uri.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -168,8 +165,7 @@ TEST(DOMVisual, MaterialScriptNoUri)
 TEST(DOMVisual, MaterialScriptNormalMapMissing)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "material_normal_map_missing.sdf");
+    sdf::testing::TestFile("sdf", "material_normal_map_missing.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -185,8 +181,7 @@ TEST(DOMVisual, MaterialScriptNormalMapMissing)
 TEST(DOMVisual, Transparency)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "shapes.sdf");
+    sdf::testing::TestFile("sdf", "shapes.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -208,8 +203,7 @@ TEST(DOMVisual, Transparency)
 TEST(DOMVisual, LoadModelFramesRelativeToJoint)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "model_frame_relative_to_joint.sdf");
+    sdf::testing::TestFile("sdf", "model_frame_relative_to_joint.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -402,8 +396,7 @@ TEST(DOMVisual, LoadModelFramesRelativeToJoint)
 TEST(DOMVisual, VisibilityFlags)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "shapes.sdf");
+    sdf::testing::TestFile("sdf", "shapes.sdf");
 
   // Load the SDF file
   sdf::Root root;

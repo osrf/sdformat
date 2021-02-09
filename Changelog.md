@@ -2,6 +2,17 @@
 
 ### libsdformat 10.X.X (202X-XX-XX)
 
+### libsdformat 10.2.0 (2021-01-12)
+
+1. Disable ign test on Windows
+    + [Pull request 456](https://github.com/osrf/sdformat/pull/456)
+
+1. Add Heightmap class
+    + [Pull request 388](https://github.com/osrf/sdformat/pull/388)
+
+1. Added `render_order` to material
+    + [Pull request 446](https://github.com/osrf/sdformat/pull/446)
+
 ### libsdformat 10.1.0 (2020-12-15)
 
 1. Fix supported shader types (`normal_map_X_space`)
@@ -86,7 +97,7 @@
 
 ### libsdformat 9.X.X (202X-XX-XX)
 
-### SDFormat 9.3.0 (2020-XX-XX)
+### libsdformat 9.3.0 (2020-09-07)
 
 1. Store material file path information.
     + [Pull request 349](https://github.com/osrf/sdformat/pull/349)
@@ -317,7 +328,7 @@
 
 ### libsdformat 8.X.X (202X-XX-XX)
 
-### SDFormat 8.9.0 (2020-09-04)
+### libsdformat 8.9.0 (2020-09-04)
 
 1. Find python3 in cmake, fix warning
     * [Pull request 328](https://github.com/osrf/sdformat/pull/328)

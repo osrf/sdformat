@@ -32,7 +32,7 @@ class sdf::AtmospherePrivate
 
   /// \brief Temperature gradient with respect to increasing altitude at sea
   /// level in units of K/m.
-  public: double temperatureGradient {-0.065};
+  public: double temperatureGradient {-0.0065};
 
   /// \brief Pressure at sea level in pascals.
   public: double pressure {101325};

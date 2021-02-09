@@ -27,14 +27,14 @@
 #include "sdf/Surface.hh"
 #include "sdf/Types.hh"
 #include "sdf/World.hh"
+
 #include "test_config.h"
 
 //////////////////////////////////////////////////
 TEST(DOMSurface, Shapes)
 {
   const auto testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "shapes.sdf");
+    sdf::testing::TestFile("sdf", "shapes.sdf");
 
   sdf::Root root;
   EXPECT_TRUE(root.Load(testFile).empty());

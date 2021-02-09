@@ -25,8 +25,8 @@
 // Test that plugin child elements are available even when nested in an include
 TEST(PluginInclude, PluginChildElements)
 {
-  const std::string MODEL_PATH = std::string(PROJECT_SOURCE_PATH)
-      + "/test/integration/model/box";
+  const auto MODEL_PATH =
+    sdf::testing::TestFile("integration", "model", "box");
 
   std::ostringstream stream;
   stream
@@ -80,8 +80,8 @@ TEST(PluginInclude, PluginChildElements)
 // Test that missing required plugin attributes are detected
 TEST(PluginInclude, PluginMissingFilename)
 {
-  const std::string MODEL_PATH = std::string(PROJECT_SOURCE_PATH)
-      + "/test/integration/model/box";
+  const auto MODEL_PATH =
+    sdf::testing::TestFile("integration", "model", "box");
 
   std::ostringstream stream;
   stream

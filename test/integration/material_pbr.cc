@@ -26,8 +26,7 @@
 TEST(Material, PbrDOM)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "material_pbr.sdf");
+    sdf::testing::TestFile("sdf", "material_pbr.sdf");
 
   // Load the SDF file into DOM
   sdf::Root root;
@@ -261,8 +260,7 @@ TEST(Material, PbrDOM)
 TEST(Material, MaterialPBR)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "material_pbr.sdf");
+    sdf::testing::TestFile("sdf", "material_pbr.sdf");
 
   // load material pbr sdf file
   sdf::Errors errors;

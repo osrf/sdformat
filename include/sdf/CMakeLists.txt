@@ -19,6 +19,7 @@ set (headers
   Geometry.hh
   SatNav.hh
   Gui.hh
+  Heightmap.hh
   Imu.hh
   Joint.hh
   JointAxis.hh

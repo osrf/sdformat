@@ -24,8 +24,7 @@
 #include "test_config.h"
 
 const std::string URDF_TEST_FILE =
-  sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "integration",
-                          "urdf_gazebo_extensions.urdf");
+  sdf::testing::TestFile("integration", "urdf_gazebo_extensions.urdf");
 
 /////////////////////////////////////////////////
 TEST(SDFParser, UrdfGazeboExtensionURDFTest)

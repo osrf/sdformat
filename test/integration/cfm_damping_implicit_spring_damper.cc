@@ -24,12 +24,12 @@
 #include "test_config.h"
 
 const std::string URDF_TEST_FILE =
-  sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "integration",
-                          "cfm_damping_implicit_spring_damper.urdf");
+  sdf::testing::TestFile(
+      "integration", "cfm_damping_implicit_spring_damper.urdf");
 
 const std::string SDF_TEST_FILE =
-  sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "integration",
-                          "cfm_damping_implicit_spring_damper.sdf");
+  sdf::testing::TestFile(
+      "integration", "cfm_damping_implicit_spring_damper.sdf");
 
 /////////////////////////////////////////////////
 TEST(SDFParser, CFMDampingSDFTest)

@@ -25,28 +25,25 @@
 #include "test_config.h"
 
 const std::string SDF_TEST_FILE =
-  sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "integration",
-    "fixed_joint_reduction.urdf");
+  sdf::testing::TestFile("integration", "fixed_joint_reduction.urdf");
 const std::string SDF_TEST_FILE_COLLISION =
-  sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "integration",
-    "fixed_joint_reduction_collision.urdf");
+  sdf::testing::TestFile("integration",
+      "fixed_joint_reduction_collision.urdf");
 const std::string SDF_TEST_FILE_SIMPLE =
-  sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "integration",
-    "fixed_joint_reduction_simple.urdf");
+  sdf::testing::TestFile("integration", "fixed_joint_reduction_simple.urdf");
 const std::string SDF_TEST_FILE_VISUAL =
-  sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "integration",
-    "fixed_joint_reduction_visual.urdf");
+  sdf::testing::TestFile("integration", "fixed_joint_reduction_visual.urdf");
 const std::string SDF_TEST_FILE_COLLISION_VISUAL_EXTENSION =
-  sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "integration",
+  sdf::testing::TestFile("integration",
     "fixed_joint_reduction_collision_visual_extension.urdf");
 const std::string SDF_TEST_FILE_COLLISION_VISUAL_EXTENSION_SDF =
-  sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "integration",
+  sdf::testing::TestFile("integration",
     "fixed_joint_reduction_collision_visual_extension.sdf");
 const std::string SDF_TEST_FILE_COLLISION_VISUAL_EXTENSION_EMPTY_ROOT =
-  sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "integration",
+  sdf::testing::TestFile("integration",
     "fixed_joint_reduction_collision_visual_empty_root.urdf");
 const std::string SDF_TEST_FILE_COLLISION_VISUAL_EXTENSION_EMPTY_ROOT_SDF =
-  sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "integration",
+  sdf::testing::TestFile("integration",
     "fixed_joint_reduction_collision_visual_empty_root.sdf");
 
 const double gc_tolerance = 1e-6;

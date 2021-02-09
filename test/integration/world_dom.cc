@@ -25,15 +25,13 @@
 #include "sdf/Model.hh"
 #include "sdf/Root.hh"
 #include "sdf/World.hh"
-#include "sdf/Filesystem.hh"
 #include "test_config.h"
 
 //////////////////////////////////////////////////
 TEST(DOMWorld, NoName)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "world_noname.sdf");
+    sdf::testing::TestFile("sdf", "world_noname.sdf");
 
   sdf::Root root;
   sdf::Errors errors = root.Load(testFile);
@@ -46,8 +44,7 @@ TEST(DOMWorld, NoName)
 TEST(DOMWorld, Duplicate)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "world_duplicate.sdf");
+    sdf::testing::TestFile("sdf", "world_duplicate.sdf");
 
   sdf::Root root;
   sdf::Errors errors = root.Load(testFile);
@@ -59,8 +56,7 @@ TEST(DOMWorld, Duplicate)
 TEST(DOMWorld, LoadIncorrectElement)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "world_complete.sdf");
+    sdf::testing::TestFile("sdf", "world_complete.sdf");
 
   sdf::Errors errors;
   // Read an SDF file, and store the result in sdfParsed.
@@ -82,8 +78,7 @@ TEST(DOMWorld, LoadIncorrectElement)
 TEST(DOMWorld, Load)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "world_complete.sdf");
+    sdf::testing::TestFile("sdf", "world_complete.sdf");
 
   sdf::Root root;
   EXPECT_TRUE(root.Load(testFile).empty());
@@ -150,8 +145,7 @@ TEST(DOMWorld, Load)
 TEST(DOMWorld, LoadModelFrameSameName)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "world_model_frame_same_name.sdf");
+    sdf::testing::TestFile("sdf", "world_model_frame_same_name.sdf");
 
   // Load the SDF file
   sdf::Root root;

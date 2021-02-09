@@ -25,10 +25,9 @@
 
 TEST(URDFParser, AtlasURDF_5runs_performance)
 {
-  const std::string
-    URDF_TEST_FILE = sdf::filesystem::append(PROJECT_SOURCE_PATH, "test",
-                                             "performance",
-                                             "parser_urdf_atlas.urdf");
+  const std::string URDF_TEST_FILE =
+      sdf::testing::TestFile("performance", "parser_urdf_atlas.urdf");
+
   for (int i = 0; i < 5; i++)
   {
     sdf::SDFPtr root = sdf::readFile(URDF_TEST_FILE);

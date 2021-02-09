@@ -34,14 +34,10 @@
 #include "sdf/World.hh"
 #include "test_config.h"
 
-const auto g_testPath = sdf::filesystem::append(PROJECT_SOURCE_PATH, "test");
-const auto g_modelsPath =
-    sdf::filesystem::append(g_testPath, "integration", "model");
-
 /////////////////////////////////////////////////
 std::string findFileCb(const std::string &_input)
 {
-  return sdf::filesystem::append(g_testPath, "integration", "model", _input);
+  return sdf::testing::TestFile("integration", "model", _input);
 }
 
 //////////////////////////////////////////////////
@@ -50,7 +46,7 @@ TEST(WhitespaceTest, Whitespace)
   sdf::setFindCallback(findFileCb);
 
   const auto worldFile =
-    sdf::filesystem::append(g_testPath, "sdf", "whitespace.sdf");
+    sdf::testing::TestFile("sdf", "whitespace.sdf");
 
   sdf::Root root;
   sdf::Errors errors = root.Load(worldFile);

@@ -35,8 +35,7 @@
 TEST(DOMScene, LoadScene)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "scene_with_sky.sdf");
+    sdf::testing::TestFile("sdf", "scene_with_sky.sdf");
 
   sdf::Root root;
   sdf::Errors errors = root.Load(testFile);

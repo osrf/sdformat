@@ -24,8 +24,7 @@
 #include "test_config.h"
 
 const std::string SDF_TEST_FILE =
-  sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "integration",
-                          "custom_elems_attrs.sdf");
+  sdf::testing::TestFile("integration", "custom_elems_attrs.sdf");
 
 /////////////////////////////////////////////////
 TEST(SDFParser, CustomElements)

@@ -64,8 +64,7 @@ TEST(DOMCollision, NoName)
 TEST(DOMCollision, DoublePendulum)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "double_pendulum.sdf");
+    sdf::testing::TestFile("sdf", "double_pendulum.sdf");
 
   // Load the SDF file
   sdf::Root root;
@@ -95,8 +94,7 @@ TEST(DOMCollision, DoublePendulum)
 TEST(DOMCollision, LoadModelFramesRelativeToJoint)
 {
   const std::string testFile =
-    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
-        "model_frame_relative_to_joint.sdf");
+    sdf::testing::TestFile("sdf", "model_frame_relative_to_joint.sdf");
 
   // Load the SDF file
   sdf::Root root;

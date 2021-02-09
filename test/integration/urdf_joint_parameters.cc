@@ -24,8 +24,7 @@
 #include "test_config.h"
 
 const std::string SDF_TEST_FILE =
-  sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "integration",
-                          "urdf_joint_parameters.urdf");
+  sdf::testing::TestFile("integration", "urdf_joint_parameters.urdf");
 
 /////////////////////////////////////////////////
 TEST(SDFParser, JointAxisParameters)

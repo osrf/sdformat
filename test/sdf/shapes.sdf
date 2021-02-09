@@ -78,7 +78,7 @@
       <collision name="mesh_col">
         <geometry>
           <mesh>
-            <uri>https://ignitionfuel.org/an_org/models/a_model/mesh/mesh.dae</uri>
+            <uri>https://fuel.ignitionrobotics.org/1.0/an_org/models/a_model/mesh/mesh.dae</uri>
             <submesh>
               <name>my_submesh</name>
               <center>true</center>
@@ -91,13 +91,56 @@
       <visual name="mesh_vis">
         <geometry>
           <mesh>
-            <uri>https://ignitionfuel.org/an_org/models/a_model/mesh/mesh.dae</uri>
+            <uri>https://fuel.ignitionrobotics.org/1.0/an_org/models/a_model/mesh/mesh.dae</uri>
             <submesh>
               <name>another_submesh</name>
               <center>false</center>
             </submesh>
             <scale>1.2 2.3 3.4</scale>
           </mesh>
+        </geometry>
+      </visual>
+
+      <collision name="heightmap_col">
+        <geometry>
+          <heightmap>
+            <uri>https://fuel.ignitionrobotics.org/1.0/an_org/models/a_model/materials/textures/heightmap.png</uri>
+            <size>500 500 100</size>
+            <pos>1 2 3</pos>
+          </heightmap>
+        </geometry>
+      </collision>
+
+      <visual name="heightmap_vis">
+        <geometry>
+          <heightmap>
+            <uri>https://fuel.ignitionrobotics.org/1.0/an_org/models/a_model/materials/textures/heightmap.png</uri>
+            <size>500 500 100</size>
+            <pos>1 2 3</pos>
+            <texture>
+              <diffuse>https://fuel.ignitionrobotics.org/1.0/an_org/models/a_model/materials/textures/diffuse0.png</diffuse>
+              <normal>https://fuel.ignitionrobotics.org/1.0/an_org/models/a_model/materials/textures/normal0.png</normal>
+              <size>5</size>
+            </texture>
+            <blend>
+              <min_height>15</min_height>
+              <fade_dist>5</fade_dist>
+            </blend>
+            <texture>
+              <diffuse>https://fuel.ignitionrobotics.org/1.0/an_org/models/a_model/materials/textures/diffuse1.png</diffuse>
+              <normal>https://fuel.ignitionrobotics.org/1.0/an_org/models/a_model/materials/textures/normal1.png</normal>
+              <size>10</size>
+            </texture>
+            <blend>
+              <min_height>30</min_height>
+              <fade_dist>10</fade_dist>
+            </blend>
+            <texture>
+              <diffuse>https://fuel.ignitionrobotics.org/1.0/an_org/models/a_model/materials/textures/diffuse2.png</diffuse>
+              <normal>https://fuel.ignitionrobotics.org/1.0/an_org/models/a_model/materials/textures/normal2.png</normal>
+              <size>20</size>
+            </texture>
+          </heightmap>
         </geometry>
       </visual>
 

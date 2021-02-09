@@ -24,8 +24,7 @@
 #include "test_config.h"
 
 const std::string SDF_TEST_FILE =
-  sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "integration",
-                          "provide_feedback.urdf");
+  sdf::testing::TestFile("integration", "provide_feedback.urdf");
 
 /////////////////////////////////////////////////
 TEST(SDFParser, ProvideFeedbackTest)

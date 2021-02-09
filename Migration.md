@@ -12,6 +12,13 @@ forward programmatically.
 This document aims to contain similar information to those files
 but with improved human-readability..
 
+## SDFormat 10.2.0 to 10.x.x
+
+### Modifications
+
+1. Fixed Atmosphere DOM class's temperature default value. Changed from -0.065 to -0.0065.
+    * [Pull request 482](https://github.com/osrf/sdformat/pull/482)
+
 ## SDFormat 9.x to 10.0
 
 ### Modifications

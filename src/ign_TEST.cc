@@ -20,6 +20,8 @@
 #include <stdlib.h>
 #include <string>
 
+#include <ignition/utilities/ExtraTestMacros.hh>
+
 #include "sdf/parser.hh"
 #include "sdf/SDFImpl.hh"
 #include "sdf/sdf_config.h"
@@ -57,7 +59,7 @@ std::string custom_exec_str(std::string _cmd)
 }
 
 /////////////////////////////////////////////////
-TEST(check, SDF)
+TEST(check, IGN_UTILS_TEST_DISABLED_ON_WIN32(SDF))
 {
   std::string pathBase = PROJECT_SOURCE_PATH;
   pathBase += "/test/sdf";
@@ -642,7 +644,7 @@ TEST(check, SDF)
 }
 
 /////////////////////////////////////////////////
-TEST(check_model_sdf, SDF)
+TEST(check_model_sdf, IGN_UTILS_TEST_DISABLED_ON_WIN32(SDF))
 {
   std::string pathBase = PROJECT_SOURCE_PATH;
   pathBase += "/test/integration/model/box";
@@ -668,7 +670,7 @@ TEST(check_model_sdf, SDF)
 }
 
 /////////////////////////////////////////////////
-TEST(describe, SDF)
+TEST(describe, IGN_UTILS_TEST_DISABLED_ON_WIN32(SDF))
 {
   // Get the description
   std::string output =
@@ -680,7 +682,7 @@ TEST(describe, SDF)
 }
 
 /////////////////////////////////////////////////
-TEST(print, SDF)
+TEST(print, IGN_UTILS_TEST_DISABLED_ON_WIN32(SDF))
 {
   std::string pathBase = PROJECT_SOURCE_PATH;
   pathBase += "/test/sdf";
@@ -715,7 +717,7 @@ int main(int argc, char **argv)
 {
   // Set IGN_CONFIG_PATH to the directory where the .yaml configuration file
   // is located.
-  setenv("IGN_CONFIG_PATH", IGN_CONFIG_PATH, 1);
+  sdf::testing::setenv("IGN_CONFIG_PATH", IGN_CONFIG_PATH);
 
   // Make sure that we load the library recently built and not the one installed
   // in your system. This is done by placing the the current build directory
@@ -726,13 +728,13 @@ int main(int argc, char **argv)
 #ifndef _WIN32
   std::string testLibraryPath = IGN_TEST_LIBRARY_PATH;
 
-  char *currentLibraryPath = std::getenv("LD_LIBRARY_PATH");
-  if (currentLibraryPath)
+  std::string currentLibraryPath;
+  if (sdf::testing::env("LD_LIBRARY_PATH", currentLibraryPath))
   {
     testLibraryPath = testLibraryPath + ":" + currentLibraryPath;
   }
 
-  setenv("LD_LIBRARY_PATH", testLibraryPath.c_str(), 1);
+  sdf::testing::setenv("LD_LIBRARY_PATH", testLibraryPath);
 #endif
 
   ::testing::InitGoogleTest(&argc, argv);
