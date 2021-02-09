@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Open Source Robotics Foundation
+ * Copyright 2021 Open Source Robotics Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  * limitations under the License.
  *
  */
-#ifndef SDF_GPS_HH_
-#define SDF_GPS_HH_
+#ifndef SDF_SATNAV_HH_
+#define SDF_SATNAV_HH_
 
 #include <sdf/Error.hh>
 #include <sdf/Element.hh>
@@ -29,19 +29,19 @@ namespace sdf
   // Inline bracket to help doxygen filtering.
   inline namespace SDF_VERSION_NAMESPACE {
   //
-  class GpsPrivate;
+  class SatNavPrivate;
 
-  /// \brief Gps contains information about a Gps sensor.
-  /// This sensor can be attached to a link. The Gps sensor can be defined
-  /// SDF XML by the "gps" type.
+  /// \brief SatNav contains information about a SatNav sensor.
+  /// This sensor can be attached to a link. The SatNav sensor can be defined
+  /// SDF XML by the "satnav" type.
   ///
-  /// # Example SDF XML using gps type:
+  /// # Example SDF XML using satnav type:
   ///
   /// ~~~{.xml}
-  /// <sensor name="gps_sensor" type="gps">
+  /// <sensor name="satnav_sensor" type="satnav">
   ///   <pose>1 2 3 0 0 0</pose>
-  ///   <topic>/gps</topic>
-  ///   <gps>
+  ///   <topic>/satnav</topic>
+  ///   <satnav>
   ///     <position_sensing>
   ///       <horizontal>
   ///         <noise type="gaussian">
@@ -70,36 +70,36 @@ namespace sdf
   ///         </noise>
   ///       </vertical>
   ///     </velocity_sensing>
-  ///   </gps>
+  ///   </satnav>
   /// </sensor>
   /// ~~~
-  class SDFORMAT_VISIBLE Gps
+  class SDFORMAT_VISIBLE SatNav
   {
     /// \brief Default constructor
-    public: Gps();
+    public: SatNav();
 
     /// \brief Copy constructor
-    /// \param[in] _gps Gps to copy.
-    public: Gps(const Gps &_gps);
+    /// \param[in] _satnav SatNav to copy.
+    public: SatNav(const SatNav &_satnav);
 
     /// \brief Move constructor
-    /// \param[in] _gps Gps to move.
-    public: Gps(Gps &&_gps) noexcept;
+    /// \param[in] _satnav SatNav to move.
+    public: SatNav(SatNav &&_satnav) noexcept;
 
     /// \brief Destructor
-    public: ~Gps();
+    public: ~SatNav();
 
     /// \brief Assignment operator
-    /// \param[in] _gps The gps to set values from.
+    /// \param[in] _satnav The satnav to set values from.
     /// \return *this
-    public: Gps &operator=(const Gps &_gps);
+    public: SatNav &operator=(const SatNav &_satnav);
 
     /// \brief Move assignment operator
-    /// \param[in] _gps The gps to set values from.
+    /// \param[in] _satnav The satnav to set values from.
     /// \return *this
-    public: Gps &operator=(Gps &&_gps) noexcept;
+    public: SatNav &operator=(SatNav &&_satnav) noexcept;
 
-    /// \brief Load the gps based on an element pointer. This is *not*
+    /// \brief Load the satnav based on an element pointer. This is *not*
     /// the usual entry point. Typical usage of the SDF DOM is through the Root
     /// object.
     /// \param[in] _sdf The SDF Element pointer
@@ -145,19 +145,19 @@ namespace sdf
     /// \return Noise values
     public: const Noise &VerticalVelocityNoise() const;
 
-    /// \brief Return true if both Gps objects contain the same values.
-    /// \param[_in] _gps Gps value to compare.
-    /// \return True if 'this' == _gps.
-    public: bool operator==(const Gps &_gps) const;
+    /// \brief Return true if both SatNav objects contain the same values.
+    /// \param[_in] _satnav SatNav value to compare.
+    /// \return True if 'this' == _satnav.
+    public: bool operator==(const SatNav &_satnav) const;
 
-    /// \brief Return true this Gps object does not contain the same
+    /// \brief Return true this SatNav object does not contain the same
     /// values as the passed in parameter.
-    /// \param[_in] _gps Gps value to compare.
-    /// \return True if 'this' != _gps.
-    public: bool operator!=(const Gps &_gps) const;
+    /// \param[_in] _satnav SatNav value to compare.
+    /// \return True if 'this' != _satnav.
+    public: bool operator!=(const SatNav &_satnav) const;
 
     /// \brief Private data pointer.
-    private: GpsPrivate *dataPtr;
+    private: SatNavPrivate *dataPtr;
   };
   }
 }

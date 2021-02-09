@@ -141,7 +141,7 @@
         <pose>10 11 12 0 0 0</pose>
       </sensor>
 
-      <sensor name="gps_sensor" type="gps">
+      <sensor name="satnav_sensor" type="gps">
         <pose>13 14 15 0 0 0</pose>
         <gps>
           <position_sensing>

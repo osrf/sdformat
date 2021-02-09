@@ -35,7 +35,7 @@ namespace sdf
   class AirPressure;
   class Altimeter;
   class Camera;
-  class Gps;
+  class SatNav;
   class Imu;
   class Lidar;
   class Magnetometer;
@@ -66,8 +66,8 @@ namespace sdf
     /// \brief A force-torque sensor.
     FORCE_TORQUE = 5,
 
-    /// \brief A GPS sensor.
-    GPS = 6,
+    /// \brief A SatNav sensor, such as GPS.
+    SATNAV = 6,
 
     /// \brief A GPU based lidar sensor.
     GPU_LIDAR = 7,
@@ -288,16 +288,16 @@ namespace sdf
     /// \sa SensorType Type() const
     public: const Camera *CameraSensor() const;
 
-    /// \brief Set the GPS sensor.
-    /// \param[in] _gps The GPS sensor.
-    public: void SetGpsSensor(const Gps &_gps);
+    /// \brief Set the SATNAV sensor.
+    /// \param[in] _satnav The SATNAV sensor.
+    public: void SetSatNavSensor(const SatNav &_satnav);
 
-    /// \brief Get a pointer to an GPS sensor, or nullptr if the sensor
-    /// does not contain an GPS sensor.
-    /// \return Pointer to the sensor's GPS, or nullptr if the sensor
-    /// is not an GPS.
+    /// \brief Get a pointer to an SATNAV sensor, or nullptr if the sensor
+    /// does not contain an SATNAV sensor.
+    /// \return Pointer to the sensor's SATNAV, or nullptr if the sensor
+    /// is not an SATNAV.
     /// \sa SensorType Type() const
-    public: const Gps *GpsSensor() const;
+    public: const SatNav *SatNavSensor() const;
 
 
     /// \brief Set the IMU sensor.

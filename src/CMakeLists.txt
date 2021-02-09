@@ -27,7 +27,7 @@ set (sources
   FrameSemantics.cc
   Filesystem.cc
   Geometry.cc
-  Gps.cc
+  SatNav.cc
   Gui.cc
   ign.cc
   Imu.cc
@@ -96,7 +96,7 @@ if (BUILD_SDF_TEST)
     Frame_TEST.cc
     Filesystem_TEST.cc
     Geometry_TEST.cc
-    Gps_TEST.cc
+    SatNav_TEST.cc
     Gui_TEST.cc
     Imu_TEST.cc
     Joint_TEST.cc

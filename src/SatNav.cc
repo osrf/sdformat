@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Open Source Robotics Foundation
+ * Copyright 2021 Open Source Robotics Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
  * limitations under the License.
  *
  */
-#include "sdf/Gps.hh"
+#include "sdf/SatNav.hh"
 
 using namespace sdf;
 using namespace ignition;
 
-/// \brief Private gps data.
-class sdf::GpsPrivate
+/// \brief Private satnav data.
+class sdf::SatNavPrivate
 {
   /// \brief Noise values for the horizontal positioning sensor
   public: Noise horizontalPositionNoise;
@@ -39,51 +39,45 @@ class sdf::GpsPrivate
 };
 
 //////////////////////////////////////////////////
-Gps::Gps()
-  : dataPtr(new GpsPrivate)
+SatNav::SatNav()
+  : dataPtr(new SatNavPrivate)
 {
 }
 
 //////////////////////////////////////////////////
-Gps::~Gps()
+SatNav::~SatNav()
 {
   delete this->dataPtr;
   this->dataPtr = nullptr;
 }
 
 //////////////////////////////////////////////////
-Gps::Gps(const Gps &_gps)
-  : dataPtr(new GpsPrivate(*_gps.dataPtr))
+SatNav::SatNav(const SatNav &_satnav)
+  : dataPtr(new SatNavPrivate(*_satnav.dataPtr))
 {
 }
 
 //////////////////////////////////////////////////
-Gps::Gps(Gps &&_gps) noexcept
-  : dataPtr(std::exchange(_gps.dataPtr, nullptr))
+SatNav::SatNav(SatNav &&_satnav) noexcept
+  : dataPtr(std::exchange(_satnav.dataPtr, nullptr))
 {
 }
 
 //////////////////////////////////////////////////
-Gps &Gps::operator=(const Gps &_gps)
+SatNav &SatNav::operator=(const SatNav &_satnav)
 {
-  return *this = Gps(_gps);
+  return *this = SatNav(_satnav);
 }
 
 //////////////////////////////////////////////////
-Gps &Gps::operator=(Gps &&_gps) noexcept
+SatNav &SatNav::operator=(SatNav &&_satnav) noexcept
 {
-  std::swap(this->dataPtr, _gps.dataPtr);
+  std::swap(this->dataPtr, _satnav.dataPtr);
   return * this;
 }
 
 //////////////////////////////////////////////////
-/// \brief Load the gps based on an element pointer. This is *not*
-/// the usual entry point. Typical usage of the SDF DOM is through the Root
-/// object.
-/// \param[in] _sdf The SDF Element pointer
-/// \return Errors, which is a vector of Error objects. Each Error includes
-/// an error code and message. An empty vector indicates no error.
-Errors Gps::Load(ElementPtr _sdf)
+Errors SatNav::Load(ElementPtr _sdf)
 {
   Errors errors;
 
@@ -93,22 +87,22 @@ Errors Gps::Load(ElementPtr _sdf)
   if (!_sdf)
   {
     errors.push_back({ErrorCode::ELEMENT_MISSING,
-        "Attempting to load GPS, but the provided SDF "
+        "Attempting to load SATNAV, but the provided SDF "
         "element is null."});
     return errors;
   }
 
-  // Check that the provided SDF element is a <gps> element.
+  // Check that the provided SDF element is a <satnav> element.
   // This is an error that cannot be recovered, so return an error.
-  if (_sdf->GetName() != "gps" )
+  if (_sdf->GetName() != "satnav" && _sdf->GetName() != "gps")
   {
     errors.push_back({ErrorCode::ELEMENT_INCORRECT_TYPE,
-        "Attempting to load GPS, but the provided SDF element is "
-        "not a <gps>."});
+        "Attempting to load SATNAV, but the provided SDF element is "
+        "not a <satnav>."});
     return errors;
   }
 
-  // Load gps sensor properties
+  // Load satnav sensor properties
   if (_sdf->HasElement("position_sensing"))
   {
     sdf::ElementPtr elem = _sdf->GetElement("position_sensing");
@@ -117,7 +111,7 @@ Errors Gps::Load(ElementPtr _sdf)
       sdf::ElementPtr horiz = elem->GetElement("horizontal");
       if (horiz->HasElement("noise"))
       {
-      this->dataPtr->horizontalPositionNoise.Load(horiz->GetElement("noise"));
+        this->dataPtr->horizontalPositionNoise.Load(horiz->GetElement("noise"));
       }
     }
     if (elem->HasElement("vertical"))
@@ -155,76 +149,76 @@ Errors Gps::Load(ElementPtr _sdf)
 }
 
 //////////////////////////////////////////////////
-sdf::ElementPtr Gps::Element() const
+sdf::ElementPtr SatNav::Element() const
 {
   return this->dataPtr->sdf;
 }
 
 //////////////////////////////////////////////////
-const Noise &Gps::HorizontalPositionNoise() const
+const Noise &SatNav::HorizontalPositionNoise() const
 {
   return this->dataPtr->horizontalPositionNoise;
 }
 
 //////////////////////////////////////////////////
-void Gps::SetHorizontalPositionNoise(const Noise &_noise)
+void SatNav::SetHorizontalPositionNoise(const Noise &_noise)
 {
   this->dataPtr->horizontalPositionNoise = _noise;
 }
 
 //////////////////////////////////////////////////
-const Noise &Gps::HorizontalVelocityNoise() const
+const Noise &SatNav::HorizontalVelocityNoise() const
 {
   return this->dataPtr->horizontalVelocityNoise;
 }
 
 //////////////////////////////////////////////////
-void Gps::SetHorizontalVelocityNoise(const Noise &_noise)
+void SatNav::SetHorizontalVelocityNoise(const Noise &_noise)
 {
   this->dataPtr->horizontalVelocityNoise = _noise;
 }
 
 //////////////////////////////////////////////////
-const Noise &Gps::VerticalPositionNoise() const
+const Noise &SatNav::VerticalPositionNoise() const
 {
   return this->dataPtr->verticalPositionNoise;
 }
 
 //////////////////////////////////////////////////
-void Gps::SetVerticalPositionNoise(const Noise &_noise)
+void SatNav::SetVerticalPositionNoise(const Noise &_noise)
 {
   this->dataPtr->verticalPositionNoise = _noise;
 }
 
 //////////////////////////////////////////////////
-const Noise &Gps::VerticalVelocityNoise() const
+const Noise &SatNav::VerticalVelocityNoise() const
 {
   return this->dataPtr->verticalVelocityNoise;
 }
 
 //////////////////////////////////////////////////
-void Gps::SetVerticalVelocityNoise(const Noise &_noise)
+void SatNav::SetVerticalVelocityNoise(const Noise &_noise)
 {
   this->dataPtr->verticalVelocityNoise = _noise;
 }
 
 //////////////////////////////////////////////////
-bool Gps::operator==(const Gps &_gps) const
+bool SatNav::operator==(const SatNav &_satnav) const
 {
-  if (this->dataPtr->verticalPositionNoise != _gps.VerticalPositionNoise())
+  if (this->dataPtr->verticalPositionNoise != _satnav.VerticalPositionNoise())
     return false;
-  if (this->dataPtr->horizontalPositionNoise != _gps.HorizontalPositionNoise())
+  if (this->dataPtr->horizontalPositionNoise != _satnav.HorizontalPositionNoise())
     return false;
-  if (this->dataPtr->verticalVelocityNoise != _gps.VerticalVelocityNoise())
+  if (this->dataPtr->verticalVelocityNoise != _satnav.VerticalVelocityNoise())
     return false;
-  if (this->dataPtr->horizontalVelocityNoise != _gps.HorizontalVelocityNoise())
+  if (this->dataPtr->horizontalVelocityNoise != _satnav.HorizontalVelocityNoise())
     return false;
 
   return true;
 }
 
 //////////////////////////////////////////////////
-bool Gps::operator!=(const Gps &_gps) const
+bool SatNav::operator!=(const SatNav &_satnav) const
 {
-  return !(*this == _gps);
+  return !(*this == _satnav);
 }
