@@ -359,7 +359,8 @@ TEST(DOMLink, Sensors)
   ASSERT_NE(nullptr, satNavSensor);
   EXPECT_EQ("satnav_sensor", satNavSensor->Name());
   EXPECT_EQ(sdf::SensorType::SATNAV, satNavSensor->Type());
-  EXPECT_EQ(ignition::math::Pose3d(13, 14, 15, 0, 0, 0), satNavSensor->RawPose());
+  EXPECT_EQ(ignition::math::Pose3d(13, 14, 15, 0, 0, 0),
+      satNavSensor->RawPose());
   const sdf::SatNav *satNavSensorObj = satNavSensor->SatNavSensor();
   ASSERT_NE(nullptr, satNavSensorObj);
 

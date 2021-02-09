@@ -207,11 +207,13 @@ bool SatNav::operator==(const SatNav &_satnav) const
 {
   if (this->dataPtr->verticalPositionNoise != _satnav.VerticalPositionNoise())
     return false;
-  if (this->dataPtr->horizontalPositionNoise != _satnav.HorizontalPositionNoise())
+  if (this->dataPtr->horizontalPositionNoise !=
+      _satnav.HorizontalPositionNoise())
     return false;
   if (this->dataPtr->verticalVelocityNoise != _satnav.VerticalVelocityNoise())
     return false;
-  if (this->dataPtr->horizontalVelocityNoise != _satnav.HorizontalVelocityNoise())
+  if (this->dataPtr->horizontalVelocityNoise !=
+      _satnav.HorizontalVelocityNoise())
     return false;
 
   return true;
