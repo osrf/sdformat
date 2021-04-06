@@ -2,6 +2,26 @@
 
 ### libsdformat 10.X.X (202X-XX-XX)
 
+### libsdformat 10.3.0 (2021-02-18)
+
+1. Replace PROJECT_SOURCE_DIR in tests
+    + [Pull request 460](https://github.com/osrf/sdformat/pull/460)
+
+1. Add Windows installation
+    + [Pull request 463](https://github.com/osrf/sdformat/pull/463)
+
+1. Add laser_retro in Visual
+    + [Pull request 454](https://github.com/osrf/sdformat/pull/454)
+
+1. Fix temperature gradient default value in Atmosphere DOM
+    + [Pull request 482](https://github.com/osrf/sdformat/pull/482)
+
+1. Wrap description tags in CDATA
+    + [Pull request 483](https://github.com/osrf/sdformat/pull/483)
+
+1. Add L16 pixel format to Camera pixel format conversion function
+    + [Pull request 487](https://github.com/osrf/sdformat/pull/487)
+
 ### libsdformat 10.2.0 (2021-01-12)
 
 1. Disable ign test on Windows
@@ -97,7 +117,61 @@
 
 ### libsdformat 9.X.X (202X-XX-XX)
 
-### libsdformat 9.3.0 (2020-09-07)
+### libsdformat 9.5.0 (2021-02-11)
+
+1. Add Windows installation
+    * [Pull request 463](https://github.com/osrf/sdformat/pull/463)
+
+1. Add laser_retro in Visual
+    * [Pull request 454](https://github.com/osrf/sdformat/pull/454)
+
+1. Wrap description tags in CDATA
+    * [Pull request 483](https://github.com/osrf/sdformat/pull/483)
+
+### libsdformat 9.4.0 (2021-01-08)
+
+1. Define `PATH_MAX` for Debian Hurd system
+    * [Pull request 369](https://github.com/osrf/sdformat/pull/369)
+
+1. Fix supported shader types (`normal_map_X_space`)
+    * [Pull request 383](https://github.com/osrf/sdformat/pull/383)
+
+1. Move list of debian dependencies to packages.apt
+    * [Pull request 392](https://github.com/osrf/sdformat/pull/392)
+
+1. Enable/disable tests for issue #202, add macOS workflow
+    * [Pull request 414](https://github.com/osrf/sdformat/pull/414)
+    * [Pull request 438](https://github.com/osrf/sdformat/pull/438)
+    * [Issue 202](https://github.com/osrf/sdformat/issues/202)
+
+1. Test included model folder missing model.config
+    * [Pull request 422](https://github.com/osrf/sdformat/pull/422)
+
+1. Prefix nested model names when flattening
+    * [Pull request 399](https://github.com/osrf/sdformat/pull/399)
+
+1. Add Sky DOM
+    * [Pull request 417](https://github.com/osrf/sdformat/pull/417)
+    * [Pull request 397](https://github.com/osrf/sdformat/pull/397)
+
+1. camera.sdf: decrease far clip lower bound
+    * [Pull request 435](https://github.com/osrf/sdformat/pull/435)
+
+1. material.sdf: add `double_sided` parameter
+    * [Pull request 410](https://github.com/osrf/sdformat/pull/410)
+
+1. Migration to GitHub: CI, links...
+    * [Pull request 239](https://github.com/osrf/sdformat/pull/239)
+    * [Pull request 310](https://github.com/osrf/sdformat/pull/310)
+    * [Pull request 390](https://github.com/osrf/sdformat/pull/390)
+
+1. Fix Actor copy operators and increase test coverage.
+    * [Pull request 301](https://github.com/osrf/sdformat/pull/301)
+
+1. Add Heightmap class
+    * [Pull request 388](https://github.com/osrf/sdformat/pull/388)
+
+### libsdformat 9.3.0 (2020-XX-XX)
 
 1. Store material file path information.
     + [Pull request 349](https://github.com/osrf/sdformat/pull/349)

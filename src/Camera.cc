@@ -902,6 +902,8 @@ PixelFormatType Camera::ConvertPixelFormat(const std::string &_format)
     return PixelFormatType::RGB_INT8;
   else if (_format == "L8")
     return PixelFormatType::L_INT8;
+  else if (_format == "L16")
+    return PixelFormatType::L_INT16;
   else if (_format == "B8G8R8")
     return PixelFormatType::BGR_INT8;
   else if (_format == "BAYER_RGGB8")

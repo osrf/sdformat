@@ -153,6 +153,15 @@
           </sphere>
         </geometry>
       </visual>
+      
+      <visual name="sphere_vis_laser_retro">
+        <laser_retro>1150</laser_retro>
+        <geometry>
+          <sphere>
+            <radius>0.5</radius>
+          </sphere>
+        </geometry>
+      </visual>
     </link>
   </model>
 </sdf>

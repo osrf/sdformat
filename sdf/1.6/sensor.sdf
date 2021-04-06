@@ -12,7 +12,7 @@
                   altimeter,
                   camera,
                   contact,
-                  depth_camera,
+                  depth_camera, depth,
                   force_torque,
                   gps,
                   gpu_lidar,
@@ -25,9 +25,9 @@
                   ray,
                   rfid,
                   rfidtag,
-                  rgbd_camera,
+                  rgbd_camera, rgbd,
                   sonar,
-                  thermal_camera,
+                  thermal_camera, thermal,
                   wireless_receiver, and
                   wireless_transmitter.
       The "ray" and "gpu_ray" types are equivalent to "lidar" and "gpu_lidar", respectively. It is preferred to use "lidar" and "gpu_lidar" since "ray" and "gpu_ray" will be deprecated. The "ray" and "gpu_ray" types are maintained for legacy support.

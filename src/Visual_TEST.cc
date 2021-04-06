@@ -272,3 +272,16 @@ TEST(DOMVisual, SetMaterial)
   EXPECT_EQ(ignition::math::Color(0.f, 0.1f, 0.9f),
             visual.Material()->Specular());
 }
+
+/////////////////////////////////////////////////
+TEST(DOMVisual, SetLaserRetro)
+{
+  sdf::Visual visual;
+  EXPECT_EQ(nullptr, visual.Element());
+  EXPECT_TRUE(visual.Name().empty());
+
+  visual.SetLaserRetro(150);
+
+  EXPECT_TRUE(visual.HasLaserRetro());
+  EXPECT_DOUBLE_EQ(150, visual.LaserRetro());
+}

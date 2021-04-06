@@ -70,6 +70,28 @@
         <pose>4 5 6 0 0 0</pose>
       </frame>
       <link name="link">
+        <particle_emitter name="emitter" type="box">
+          <pose>7 8 9 0 0 0</pose>
+          <emitting>true</emitting>
+          <size>10 11 12</size>
+          <particle_size>1 2 3</particle_size>
+          <lifetime>25</lifetime>
+          <min_velocity>0.1</min_velocity>
+          <max_velocity>0.2</max_velocity>
+          <scale_rate>0.5</scale_rate>
+          <rate>5</rate>
+          <material>
+            <diffuse>0.7 0.7 0.7</diffuse>
+            <specular>1.0 1.0 1.0</specular>
+            <pbr>
+              <metal>
+                <albedo_map>materials/textures/fog.png</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+          <color_range_image>materials/textures/fogcolors.png</color_range_image>
+        </particle_emitter>
+
         <light name="spot_light" type="spot">
           <pose relative_to="frame2">7 8 9 0 0 0</pose>
           <cast_shadows>true</cast_shadows>

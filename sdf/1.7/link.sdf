@@ -46,5 +46,6 @@
   <include filename="audio_source.sdf" required="*"/>
   <include filename="battery.sdf" required="*"/>
   <include filename="light.sdf" required="*"/>
+  <include filename="particle_emitter.sdf" required="*"/>
 
 </element> <!-- End Link -->

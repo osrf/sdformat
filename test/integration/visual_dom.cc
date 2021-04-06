@@ -199,6 +199,30 @@ TEST(DOMVisual, Transparency)
   EXPECT_FLOAT_EQ(0.22f, vis1->Transparency());
 }
 
+//////////////////////////////////////////////////
+TEST(DOMVisual, LaserRetro)
+{
+  const std::string testFile =
+    sdf::filesystem::append(PROJECT_SOURCE_PATH, "test", "sdf",
+        "shapes.sdf");
+
+  // Load the SDF file
+  sdf::Root root;
+  EXPECT_TRUE(root.Load(testFile).empty());
+
+  const sdf::Model *model = root.ModelByIndex(0);
+  ASSERT_NE(nullptr, model);
+
+  const sdf::Link *link = model->LinkByIndex(0);
+  ASSERT_NE(nullptr, link);
+
+  const sdf::Visual *vis1 = link->VisualByName("sphere_vis_laser_retro");
+  ASSERT_NE(nullptr, vis1);
+
+  ASSERT_EQ(true, vis1->HasLaserRetro());
+  EXPECT_DOUBLE_EQ(1150, vis1->LaserRetro());
+}
+
 /////////////////////////////////////////////////
 TEST(DOMVisual, LoadModelFramesRelativeToJoint)
 {

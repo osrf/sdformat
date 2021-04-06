@@ -111,6 +111,7 @@ namespace sdf
     friend class Joint;
     friend class Light;
     friend class Link;
+    friend class ParticleEmitter;
     friend class Model;
     friend class Sensor;
     friend class Visual;

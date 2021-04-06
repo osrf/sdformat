@@ -22,6 +22,7 @@
 #include "sdf/Collision.hh"
 #include "sdf/Light.hh"
 #include "sdf/Link.hh"
+#include "sdf/ParticleEmitter.hh"
 #include "sdf/Sensor.hh"
 #include "sdf/Visual.hh"
 
@@ -47,6 +48,13 @@ TEST(DOMLink, Construction)
   EXPECT_FALSE(link.LightNameExists(""));
   EXPECT_FALSE(link.LightNameExists("default"));
   EXPECT_EQ(nullptr, link.LightByName("no_such_light"));
+
+  EXPECT_EQ(0u, link.ParticleEmitterCount());
+  EXPECT_EQ(nullptr, link.ParticleEmitterByIndex(0));
+  EXPECT_EQ(nullptr, link.ParticleEmitterByIndex(1));
+  EXPECT_FALSE(link.ParticleEmitterNameExists(""));
+  EXPECT_FALSE(link.ParticleEmitterNameExists("default"));
+  EXPECT_EQ(nullptr, link.ParticleEmitterByName("no_such_emitter"));
 
   EXPECT_FALSE(link.EnableWind());
   link.SetEnableWind(true);

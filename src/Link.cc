@@ -25,6 +25,7 @@
 #include "sdf/Error.hh"
 #include "sdf/Light.hh"
 #include "sdf/Link.hh"
+#include "sdf/ParticleEmitter.hh"
 #include "sdf/Sensor.hh"
 #include "sdf/Types.hh"
 #include "sdf/Visual.hh"
@@ -54,6 +55,9 @@ class sdf::LinkPrivate
 
   /// \brief The sensors specified in this link.
   public: std::vector<Sensor> sensors;
+
+  /// \brief The particle emitters specified in this link.
+  public: std::vector<ParticleEmitter> emitters;
 
   /// \brief The inertial information for this link.
   public: ignition::math::Inertiald inertial {{1.0,
@@ -162,6 +166,12 @@ Errors Link::Load(ElementPtr _sdf)
   Errors sensorLoadErrors = loadUniqueRepeated<Sensor>(_sdf, "sensor",
       this->dataPtr->sensors);
   errors.insert(errors.end(), sensorLoadErrors.begin(), sensorLoadErrors.end());
+
+  // Load all the particle emitters.
+  Errors emitterLoadErrors = loadUniqueRepeated<ParticleEmitter>(_sdf,
+      "particle_emitter", this->dataPtr->emitters);
+  errors.insert(errors.end(), emitterLoadErrors.begin(),
+      emitterLoadErrors.end());
 
   ignition::math::Vector3d xxyyzz = ignition::math::Vector3d::One;
   ignition::math::Vector3d xyxzyz = ignition::math::Vector3d::Zero;
@@ -337,6 +347,48 @@ const Sensor *Link::SensorByName(const std::string &_name) const
 }
 
 /////////////////////////////////////////////////
+uint64_t Link::ParticleEmitterCount() const
+{
+  return this->dataPtr->emitters.size();
+}
+
+/////////////////////////////////////////////////
+const ParticleEmitter *Link::ParticleEmitterByIndex(const uint64_t _index) const
+{
+  if (_index < this->dataPtr->emitters.size())
+    return &this->dataPtr->emitters[_index];
+  return nullptr;
+}
+
+/////////////////////////////////////////////////
+bool Link::ParticleEmitterNameExists(const std::string &_name) const
+{
+  for (auto const &e : this->dataPtr->emitters)
+  {
+    if (e.Name() == _name)
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+/////////////////////////////////////////////////
+const ParticleEmitter *Link::ParticleEmitterByName(
+    const std::string &_name) const
+{
+  for (auto const &e : this->dataPtr->emitters)
+  {
+    if (e.Name() == _name)
+    {
+      return &e;
+    }
+  }
+  return nullptr;
+}
+
+
+/////////////////////////////////////////////////
 const ignition::math::Inertiald &Link::Inertial() const
 {
   return this->dataPtr->inertial;
@@ -399,6 +451,12 @@ void Link::SetPoseRelativeToGraph(
   {
     visual.SetXmlParentName(this->dataPtr->name);
     visual.SetPoseRelativeToGraph(_graph);
+  }
+
+  for (auto &emitter : this->dataPtr->emitters)
+  {
+    emitter.SetXmlParentName(this->dataPtr->name);
+    emitter.SetPoseRelativeToGraph(_graph);
   }
 }
 

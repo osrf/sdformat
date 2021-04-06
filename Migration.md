@@ -62,7 +62,21 @@ but with improved human-readability..
     + std::optional<std::string> GetMaxValueAsString() const;
     + bool ValidateValue() const;
 
-## SDFormat 9.0 to 9.3
+## libsdformat 9.3 to 9.4
+
+### Modifications
+
+1. **camera.sdf**
+    + Reduce minimum value of `//camera/clip/far`
+
+### Deprecations
+
+1. Fix spelling of supported shader types in `//material/shader/@type`
+    + `normal_map_objectspace`  replaced by `normal_map_object_space`
+    + `normal_map_tangentspace` replaced by `normal_map_tangent_space`
+    + [pull request 383](https://github.com/osrf/sdformat/pull/383)
+
+## libsdformat 9.0 to 9.3
 
 ### Additions
 

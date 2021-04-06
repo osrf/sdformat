@@ -36,6 +36,7 @@ namespace sdf
   class Collision;
   class Light;
   class LinkPrivate;
+  class ParticleEmitter;
   class Sensor;
   class Visual;
   class LinkPrivate;
@@ -170,6 +171,32 @@ namespace sdf
     ///  does not exist.
     /// \sa bool SensorNameExists(const std::string &_name) const
     public: const Sensor *SensorByName(const std::string &_name) const;
+
+    /// \brief Get the number of particle emitters.
+    /// \return Number of particle emitters contained in this Link object.
+    public: uint64_t ParticleEmitterCount() const;
+
+    /// \brief Get a particle emitter based on an index.
+    /// \param[in] _index Index of the particle emitter.
+    /// The index should be in the range [0..ParticleEmitterCount()).
+    /// \return Pointer to the particle emitter. Nullptr if the index does
+    /// not exist.
+    /// \sa uint64_t ParticleEmitterCount() const
+    public: const ParticleEmitter *ParticleEmitterByIndex(
+                const uint64_t _index) const;
+
+    /// \brief Get whether a particle emitter name exists.
+    /// \param[in] _name Name of the particle emitter to check.
+    /// \return True if there exists a particle emitter with the given name.
+    public: bool ParticleEmitterNameExists(const std::string &_name) const;
+
+    /// \brief Get a particle emitter based on a name.
+    /// \param[in] _name Name of the particle emitter.
+    /// \return Pointer to the particle emitter. Nullptr if a particle emitter
+    /// with the given name does not exist.
+    /// \sa bool ParticleEmitterNameExists(const std::string &_name) const
+    public: const ParticleEmitter *ParticleEmitterByName(
+                const std::string &_name) const;
 
     /// \brief Get the inertial value for this link. The inertial object
     /// consists of the link's mass, a 3x3 rotational inertia matrix, and
