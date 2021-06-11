@@ -60,9 +60,8 @@ bool loadPose(sdf::ElementPtr _sdf, ignition::math::Pose3d &_pose,
   std::pair<std::string, bool> framePair =
       sdf->Get<std::string>("relative_to", "");
 
-  // Read the rotation type.
-  std::pair<std::string, bool> rotationTypePair =
-      sdf->Get<std::string>("rotation_type", "rpy_radians");
+  // Read the degrees attribute.
+  std::pair<bool, bool> isDegreesPair = sdf->Get<bool>("degrees", false);
 
   // Read the pose value.
   std::pair<ignition::math::Pose3d, bool> posePair =
@@ -74,7 +73,7 @@ bool loadPose(sdf::ElementPtr _sdf, ignition::math::Pose3d &_pose,
     _frame = framePair.first;
 
     // Modify the rotation component if the unit used was degrees
-    if (rotationTypePair.second && rotationTypePair.first == "rpy_degrees")
+    if (isDegreesPair.second && isDegreesPair.first)
     {
       ignition::math::Vector3d rpyRadians(
           IGN_DTOR(posePair.first.Roll()),

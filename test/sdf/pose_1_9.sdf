@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<sdf version="1.9">
+  <world name="default">
+
+    <model name="model_with_empty_pose">
+      <pose></pose>
+      <link name="link"/>
+    </model>
+
+    <model name="model_with_empty_pose_with_attribute_true">
+      <pose degrees="true"></pose> 
+      <link name="link"/>
+    </model>
+
+    <model name="model_with_empty_pose_with_attribute_false">
+      <pose degrees="false"></pose> 
+      <link name="link"/>
+    </model>
+
+    <model name="model_with_rpy_pose_no_attribute">
+      <pose>1 2 3 0.4 0.5 0.6</pose>
+      <link name="link"/>
+    </model>
+
+    <model name="model_with_rpy_pose_with_attribute_true">
+      <pose degrees="true">1 2 3 0.4 0.5 0.6</pose>
+      <link name="link"/>
+    </model>
+
+    <model name="model_with_rpy_pose_with_attribute_false">
+      <pose degrees="false">1 2 3 0.4 0.5 0.6</pose>
+      <link name="link"/>
+    </model>
+
+    <model name="model_with_quaternion">
+      <pose>1 2 3 0.7071068 0.7071068 0 0</pose>
+      <link name="link"/>
+    </model>
+
+  </world>
+</sdf>

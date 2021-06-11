@@ -37,6 +37,7 @@ set(tests
   plugin_attribute.cc
   plugin_bool.cc
   plugin_include.cc
+  pose_1_9_sdf.cc
   provide_feedback.cc
   root_dom.cc
   scene_dom.cc
