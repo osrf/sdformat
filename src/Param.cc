@@ -428,6 +428,84 @@ bool ParseColorUsingStringStream(const std::string &_input,
 }
 
 //////////////////////////////////////////////////
+/// \brief Helper function for Param::ValueFromString for parsing pose
+/// This checks the pose components specified in _input are xyzrpy or xyzwxyz
+/// (expects 6 ir 7 values) and the resulting pose is valid.
+/// \param[in] _input Input string.
+/// \param[in] _key Key of the parameter, used for error message.
+/// \param[out] _value This will be set with the parsed value.
+/// \return True if parsing pose succeeded.
+bool ParsePoseUsingStringStream(const std::string &_input,
+    const std::string &_key, ParamPrivate::ParamVariant &_value)
+{
+  StringStreamClassicLocale ss(_input);
+  std::string token;
+  std::vector<double> values;
+  double v;
+  bool isValidPose = true;
+  while (ss >> token)
+  {
+    try
+    {
+      v = std::stod(token);
+    }
+    // Catch invalid argument exception from std::stod
+    catch(std::invalid_argument &)
+    {
+      sdferr << "Invalid argument. Unable to set value ["<< token
+             << "] for key [" << _key << "].\n";
+      isValidPose = false;
+      break;
+    }
+    // Catch out of range exception from std::stof
+    catch(std::out_of_range &)
+    {
+      sdferr << "Out of range. Unable to set value [" << token
+             << "] for key [" << _key << "].\n";
+      isValidPose = false;
+      break;
+    }
+
+    if (values.size() > 7)
+    {
+      sdferr << "Pose values cannot have more than 7 values.\n";
+      isValidPose = false;
+      break;
+    }
+
+    if (!std::isfinite(v))
+    {
+      sdferr << "Pose values must be finite.\n";
+      isValidPose = false;
+      break;
+    }
+
+    values.push_back(v);
+  }
+
+  if (!isValidPose)
+    return ParseUsingStringStream<ignition::math::Pose3d>(_input, _key, _value);
+  
+  if (values.size() == 6u)
+  {
+    _value = ignition::math::Pose3d(values[0], values[1], values[2],
+        values[3], values[4], values[5]);
+  }
+  else if (values.size() == 7u)
+  {
+    _value = ignition::math::Pose3d(values[0], values[1], values[2],
+        values[3], values[4], values[5], values[6]);
+  }
+  else
+  {
+    sdferr << "Pose values must have either 6 or 7 values.\n";
+    return false;
+  }
+
+  return true;
+}
+
+//////////////////////////////////////////////////
 bool Param::ValueFromString(const std::string &_value)
 {
   // Under some circumstances, latin locales (es_ES or pt_BR) will return a
@@ -543,7 +621,7 @@ bool Param::ValueFromString(const std::string &_value)
     {
       if (!tmp.empty())
       {
-        return ParseUsingStringStream<ignition::math::Pose3d>(
+        return ParsePoseUsingStringStream(
             tmp, this->dataPtr->key, this->dataPtr->value);
       }
     }
