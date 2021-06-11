@@ -485,7 +485,7 @@ bool ParsePoseUsingStringStream(const std::string &_input,
 
   if (!isValidPose)
     return ParseUsingStringStream<ignition::math::Pose3d>(_input, _key, _value);
-  
+
   if (values.size() == 6u)
   {
     _value = ignition::math::Pose3d(values[0], values[1], values[2],

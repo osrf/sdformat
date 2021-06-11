@@ -66,20 +66,20 @@ TEST(Pose1_9, ModelPoses)
   ASSERT_NE(nullptr, model);
   ASSERT_EQ("model_with_empty_pose_with_attribute_false", model->Name());
   EXPECT_EQ(Pose::Zero, model->RawPose());
-  
+
   std::cout << "model_with_rpy_pose_no_attribute" << std::endl;
   model = world->ModelByIndex(3);
   ASSERT_NE(nullptr, model);
   ASSERT_EQ("model_with_rpy_pose_no_attribute", model->Name());
   EXPECT_EQ(Pose(1, 2, 3, 0.4, 0.5, 0.6), model->RawPose());
-  
+
   std::cout << "model_with_rpy_pose_with_attribute_true" << std::endl;
   model = world->ModelByIndex(4);
   ASSERT_NE(nullptr, model);
   ASSERT_EQ("model_with_rpy_pose_with_attribute_true", model->Name());
   EXPECT_EQ(Pose(1, 2, 3, IGN_DTOR(0.4), IGN_DTOR(0.5), IGN_DTOR(0.6)),
       model->RawPose());
-  
+
   std::cout << "model_with_rpy_pose_with_attribute_false" << std::endl;
   model = world->ModelByIndex(5);
   ASSERT_NE(nullptr, model);
