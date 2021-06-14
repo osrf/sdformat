@@ -99,4 +99,163 @@ TEST(SDFParser, UrdfGazeboExtensionURDFTest)
       EXPECT_TRUE(physics->Get<bool>("implicit_spring_damper"));
     }
   }
+
+  sdf::ElementPtr link0;
+  for (sdf::ElementPtr link = model->GetElement("link"); link;
+       link = link->GetNextElement("link"))
+  {
+    const auto& linkName = link->Get<std::string>("name");
+    if (linkName == "link0")
+    {
+      link0 = link;
+      break;
+    }
+  }
+  ASSERT_TRUE(link0);
+
+  bool foundSensorNoPose {false};
+  bool foundSensorPose {false};
+  bool foundSensorPoseRelative {false};
+  bool foundSensorPoseTwoLevel {false};
+  bool foundIssue378Sensor {false};
+  bool foundIssue67Sensor {false};
+
+  for (sdf::ElementPtr sensor = link0->GetElement("sensor"); sensor;
+       sensor = sensor->GetNextElement("sensor"))
+  {
+    const auto& sensorName = sensor->Get<std::string>("name");
+    if (sensorName == "sensorNoPose")
+    {
+      foundSensorNoPose = true;
+      ASSERT_TRUE(sensor->HasElement("pose"));
+      const auto poseElem = sensor->GetElement("pose");
+
+      const auto& posePair = poseElem->Get<ignition::math::Pose3d>(
+        "", ignition::math::Pose3d::Zero);
+      ASSERT_TRUE(posePair.second);
+
+      const auto& pose = posePair.first;
+
+      EXPECT_DOUBLE_EQ(pose.X(), 333.0);
+      EXPECT_DOUBLE_EQ(pose.Y(), 0.0);
+      EXPECT_DOUBLE_EQ(pose.Z(), 0.0);
+      EXPECT_DOUBLE_EQ(pose.Roll(), 0.0);
+      EXPECT_DOUBLE_EQ(pose.Pitch(), 0.0);
+      EXPECT_NEAR(pose.Yaw(), IGN_PI_2, 1e-5);
+
+      EXPECT_FALSE(poseElem->GetNextElement("pose"));
+    }
+    else if (sensorName == "sensorPose")
+    {
+      foundSensorPose = true;
+      ASSERT_TRUE(sensor->HasElement("pose"));
+      const auto poseElem = sensor->GetElement("pose");
+
+      const auto& posePair = poseElem->Get<ignition::math::Pose3d>(
+        "", ignition::math::Pose3d::Zero);
+      ASSERT_TRUE(posePair.second);
+
+      const auto& pose = posePair.first;
+
+      EXPECT_DOUBLE_EQ(pose.X(), 333.0);
+      EXPECT_DOUBLE_EQ(pose.Y(), 111.0);
+      EXPECT_DOUBLE_EQ(pose.Z(), 0.0);
+      EXPECT_DOUBLE_EQ(pose.Roll(), 0.0);
+      EXPECT_DOUBLE_EQ(pose.Pitch(), 0.0);
+      EXPECT_NEAR(pose.Yaw(), IGN_PI_2 - 1, 1e-5);
+
+      EXPECT_FALSE(poseElem->GetNextElement("pose"));
+    }
+    else if (sensorName == "sensorPoseRelative")
+    {
+      foundSensorPoseRelative = true;
+      ASSERT_TRUE(sensor->HasElement("pose"));
+      const auto poseElem = sensor->GetElement("pose");
+
+      const auto& posePair = poseElem->Get<ignition::math::Pose3d>(
+        "", ignition::math::Pose3d::Zero);
+      ASSERT_TRUE(posePair.second);
+
+      const auto& pose = posePair.first;
+
+      EXPECT_DOUBLE_EQ(pose.X(), 111.0);
+      EXPECT_DOUBLE_EQ(pose.Y(), 0.0);
+      EXPECT_DOUBLE_EQ(pose.Z(), 0.0);
+      EXPECT_DOUBLE_EQ(pose.Roll(), 0.0);
+      EXPECT_DOUBLE_EQ(pose.Pitch(), 0.0);
+      EXPECT_NEAR(pose.Yaw(), -1, 1e-5);
+
+      EXPECT_FALSE(poseElem->GetNextElement("pose"));
+    }
+    else if (sensorName == "sensorPoseTwoLevel")
+    {
+      foundSensorPoseTwoLevel = true;
+      ASSERT_TRUE(sensor->HasElement("pose"));
+      const auto poseElem = sensor->GetElement("pose");
+
+      const auto& posePair = poseElem->Get<ignition::math::Pose3d>(
+        "", ignition::math::Pose3d::Zero);
+      ASSERT_TRUE(posePair.second);
+
+      const auto& pose = posePair.first;
+
+      EXPECT_DOUBLE_EQ(pose.X(), 333.0);
+      EXPECT_DOUBLE_EQ(pose.Y(), 111.0);
+      EXPECT_DOUBLE_EQ(pose.Z(), 222.0);
+      EXPECT_DOUBLE_EQ(pose.Roll(), 0.0);
+      EXPECT_DOUBLE_EQ(pose.Pitch(), 0.0);
+      EXPECT_NEAR(pose.Yaw(), IGN_PI_2 - 1, 1e-5);
+
+      EXPECT_FALSE(poseElem->GetNextElement("pose"));
+    }
+    else if (sensorName == "issue378_sensor")
+    {
+      foundIssue378Sensor = true;
+      ASSERT_TRUE(sensor->HasElement("pose"));
+      const auto poseElem = sensor->GetElement("pose");
+
+      const auto& posePair = poseElem->Get<ignition::math::Pose3d>(
+        "", ignition::math::Pose3d::Zero);
+      ASSERT_TRUE(posePair.second);
+
+      const auto& pose = posePair.first;
+
+      EXPECT_DOUBLE_EQ(pose.X(), 1);
+      EXPECT_DOUBLE_EQ(pose.Y(), 2);
+      EXPECT_DOUBLE_EQ(pose.Z(), 3);
+      EXPECT_DOUBLE_EQ(pose.Roll(), 0.1);
+      EXPECT_DOUBLE_EQ(pose.Pitch(), 0.2);
+      EXPECT_DOUBLE_EQ(pose.Yaw(), 0.3);
+
+      EXPECT_FALSE(poseElem->GetNextElement("pose"));
+    }
+    else if (sensorName == "issue67_sensor")
+    {
+      foundIssue67Sensor = true;
+      ASSERT_TRUE(sensor->HasElement("pose"));
+      const auto poseElem = sensor->GetElement("pose");
+
+      const auto& posePair = poseElem->Get<ignition::math::Pose3d>(
+        "", ignition::math::Pose3d::Zero);
+      ASSERT_TRUE(posePair.second);
+
+      const auto& pose = posePair.first;
+
+      EXPECT_GT(std::abs(pose.X() - (-0.20115)), 0.1);
+      EXPECT_GT(std::abs(pose.Y() - 0.42488), 0.1);
+      EXPECT_GT(std::abs(pose.Z() - 0.30943), 0.1);
+      EXPECT_GT(std::abs(pose.Roll() - 1.5708), 0.1);
+      EXPECT_GT(std::abs(pose.Pitch() - (-0.89012)), 0.1);
+      EXPECT_GT(std::abs(pose.Yaw() - 1.5708), 0.1);
+
+      EXPECT_FALSE(poseElem->GetNextElement("pose"));
+    }
+  }
+
+  EXPECT_TRUE(foundSensorNoPose);
+  EXPECT_TRUE(foundSensorPose);
+  EXPECT_TRUE(foundSensorPoseRelative);
+  EXPECT_TRUE(foundSensorPoseTwoLevel);
+  EXPECT_TRUE(foundIssue378Sensor);
+  EXPECT_TRUE(foundIssue67Sensor);
 }

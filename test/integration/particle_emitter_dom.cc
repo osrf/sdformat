@@ -78,6 +78,7 @@ TEST(DOMWorld, LoadParticleEmitter)
   EXPECT_DOUBLE_EQ(0.2, linkEmitter->MaxVelocity());
   EXPECT_DOUBLE_EQ(0.5, linkEmitter->ScaleRate());
   EXPECT_DOUBLE_EQ(5, linkEmitter->Rate());
+  EXPECT_FLOAT_EQ(0.2f, linkEmitter->ScatterRatio());
 
   sdf::Material *mat = linkEmitter->Material();
   ASSERT_NE(nullptr, mat);

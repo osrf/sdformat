@@ -2125,6 +2125,8 @@ void InsertSDFExtensionLink(tinyxml2::XMLElement *_elem,
         for (auto blobIt = (*ge)->blobs.begin();
             blobIt != (*ge)->blobs.end(); ++blobIt)
         {
+          // Be sure to always copy only the first element; code in
+          // ReduceSDFExtensionSensorTransformReduction depends in this behavior
           CopyBlob((*blobIt)->FirstChildElement(), _elem);
         }
       }
@@ -3354,8 +3356,8 @@ void ReduceSDFExtensionSensorTransformReduction(
     std::vector<XMLDocumentPtr>::iterator _blobIt,
     ignition::math::Pose3d _reductionTransform)
 {
-  // overwrite <xyz> and <rpy> if they exist
-  if ( strcmp((*_blobIt)->FirstChildElement()->Name(), "sensor") == 0)
+  auto sensorElement = (*_blobIt)->FirstChildElement();
+  if ( strcmp(sensorElement->Name(), "sensor") == 0)
   {
     // parse it and add/replace the reduction transform
     // find first instance of xyz and rpy, replace with reduction transform
@@ -3369,15 +3371,57 @@ void ReduceSDFExtensionSensorTransformReduction(
     //   sdfdbg << "    " << streamIn.CStr() << "\n";
     // }
 
+    auto sensorPose {ignition::math::Pose3d::Zero};
     {
-      tinyxml2::XMLNode *oldPoseKey = (*_blobIt)->FirstChildElement("pose");
-      /// @todo: FIXME:  we should read xyz, rpy and aggregate it to
-      /// reductionTransform instead of just throwing the info away.
+      auto sensorPosText = "0 0 0 0 0 0";
+      const auto& oldPoseKey = sensorElement->FirstChildElement("pose");
       if (oldPoseKey)
       {
-        (*_blobIt)->DeleteChild(oldPoseKey);
+        const auto& poseElemXml = oldPoseKey->ToElement();
+        if (poseElemXml->Attribute("relative_to"))
+          return;
+
+        // see below for explanation; if a sibling element exists, it stores the
+        // original <sensor><pose> tag content
+        const auto& sibling = sensorElement->NextSibling();
+        if (poseElemXml->GetText() && !sibling)
+          sensorPosText = poseElemXml->GetText();
+        else if (sibling && sibling->ToElement()->GetText())
+          sensorPosText = sibling->ToElement()->GetText();
+        else
+        {
+          sdferr << "Unexpected case in sensor pose computation\n";
+          return;
+        }
+
+        // delete the <pose> tag, we'll add a new one at the end
+        sensorElement->DeleteChild(oldPoseKey);
       }
+
+      // parse the 6-tuple text into math::Pose3d
+      std::stringstream  ss;
+      ss.imbue(std::locale::classic());
+      ss << sensorPosText;
+      ss >> sensorPose;
+      if (ss.fail())
+      {
+        sdferr << "Could not parse <sensor><pose>: [" << sensorPosText << "]\n";
+        return;
+      }
+
+      // critical part: we store the original <pose> tag from <sensor> actually
+      // as a sibling of <sensor>... only first element of the blob is processed
+      // further, so its siblings can be used as temporary storage; we store the
+      // original <pose> tag there so that we can use the <sensor><pose> tag
+      // for storing the reduced position
+      auto doc = (*_blobIt)->GetDocument();
+      const auto& poseTxt = doc->NewText(sensorPosText);
+      auto poseKey = doc->NewElement("pose");
+      poseKey->LinkEndChild(poseTxt);
+      (*_blobIt)->LinkEndChild(poseKey);
     }
+
+    _reductionTransform = _reductionTransform * sensorPose;
 
     // convert reductionTransform to values
     urdf::Vector3 reductionXyz(_reductionTransform.Pos().X(),
@@ -3403,7 +3447,7 @@ void ReduceSDFExtensionSensorTransformReduction(
 
     poseKey->LinkEndChild(poseTxt);
 
-    (*_blobIt)->LinkEndChild(poseKey);
+    sensorElement->LinkEndChild(poseKey);
   }
 }
 
@@ -3412,8 +3456,8 @@ void ReduceSDFExtensionProjectorTransformReduction(
     std::vector<XMLDocumentPtr>::iterator _blobIt,
     ignition::math::Pose3d _reductionTransform)
 {
-  // overwrite <pose> (xyz/rpy) if it exists
-  if ( strcmp((*_blobIt)->FirstChildElement()->Name(), "projector") == 0)
+  auto projectorElement = (*_blobIt)->FirstChildElement();
+  if ( strcmp(projectorElement->Name(), "projector") == 0)
   {
     // parse it and add/replace the reduction transform
     // find first instance of xyz and rpy, replace with reduction transform
@@ -3426,15 +3470,58 @@ void ReduceSDFExtensionProjectorTransformReduction(
     //   sdfdbg << "    " << streamIn << "\n";
     // }
 
-    // should read <pose>...</pose> and agregate reductionTransform
-    tinyxml2::XMLNode *poseKey = (*_blobIt)->FirstChildElement("pose");
-    // read pose and save it
-
-    // remove the tag for now
-    if (poseKey)
+    auto projectorPose {ignition::math::Pose3d::Zero};
     {
-      (*_blobIt)->DeleteChild(poseKey);
+      auto projectorPosText = "0 0 0 0 0 0";
+      const auto& oldPoseKey = projectorElement->FirstChildElement("pose");
+      if (oldPoseKey)
+      {
+        const auto& poseElemXml = oldPoseKey->ToElement();
+        if (poseElemXml->Attribute("relative_to"))
+          return;
+
+        // see below for explanation; if a sibling element exists, it stores the
+        // original <projector><pose> tag content
+        const auto& sibling = projectorElement->NextSibling();
+        if (poseElemXml->GetText() && !sibling)
+          projectorPosText = poseElemXml->GetText();
+        else if (sibling && sibling->ToElement()->GetText())
+          projectorPosText = sibling->ToElement()->GetText();
+        else
+        {
+          sdferr << "Unexpected case in projector pose computation\n";
+          return;
+        }
+
+        // delete the <pose> tag, we'll add a new one at the end
+        projectorElement->DeleteChild(oldPoseKey);
+      }
+
+      // parse the 6-tuple text into math::Pose3d
+      std::stringstream  ss;
+      ss.imbue(std::locale::classic());
+      ss << projectorPosText;
+      ss >> projectorPose;
+      if (ss.fail())
+      {
+        sdferr << "Could not parse <projector><pose>: ["
+               << projectorPosText << "]\n";
+        return;
+      }
+
+      // critical part: we store the original <pose> tag from <projector>
+      // actually as a sibling of <projector>... only first element of the blob
+      // is processed further, so its siblings can be used as temporary storage;
+      // we store the original <pose> tag there so that we can use the
+      // <projector><pose> tag for storing the reduced position
+      auto doc = (*_blobIt)->GetDocument();
+      const auto& poseTxt = doc->NewText(projectorPosText);
+      auto poseKey = doc->NewElement("pose");
+      poseKey->LinkEndChild(poseTxt);
+      (*_blobIt)->LinkEndChild(poseKey);
     }
+
+    _reductionTransform = _reductionTransform * projectorPose;
 
     // convert reductionTransform to values
     urdf::Vector3 reductionXyz(_reductionTransform.Pos().X(),
@@ -3456,10 +3543,10 @@ void ReduceSDFExtensionProjectorTransformReduction(
 
     auto* doc = (*_blobIt)->GetDocument();
     tinyxml2::XMLText *poseTxt = doc->NewText(poseStream.str().c_str());
-    poseKey = doc->NewElement("pose");
+    auto poseKey = doc->NewElement("pose");
     poseKey->LinkEndChild(poseTxt);
 
-    (*_blobIt)->LinkEndChild(poseKey);
+    projectorElement->LinkEndChild(poseKey);
   }
 }
 

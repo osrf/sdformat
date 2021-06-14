@@ -90,6 +90,7 @@
             </pbr>
           </material>
           <color_range_image>materials/textures/fogcolors.png</color_range_image>
+          <particle_scatter_ratio>0.2</particle_scatter_ratio>
         </particle_emitter>
 
         <light name="spot_light" type="spot">

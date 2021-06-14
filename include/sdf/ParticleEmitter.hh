@@ -276,6 +276,17 @@ namespace sdf
     /// \param[in] _topic The topic used to update the particle emitter.
     public: void SetTopic(const std::string &_topic);
 
+    /// \brief Get the particle scatter ratio. This is used to determine the
+    /// ratio of particles that will be detected by sensors.
+    /// \return Particle scatter ratio
+    /// \sa SetScatterRatio
+    public: float ScatterRatio() const;
+
+    /// \brief Set the particle scatter ratio. This is used to determine the
+    /// ratio of particles that will be detected by sensors.
+    /// \param[in] _ratio Scatter ratio.
+    public: void SetScatterRatio(float _ratio);
+
     /// \brief Get the pose of the particle emitter. This is the pose of the
     /// emitter as specified in SDF
     /// (<particle_emitter><pose> ... </pose></particle_emitter>).

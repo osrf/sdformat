@@ -137,4 +137,182 @@
     </visual>
   </link>
 
+  <!-- Test lumping of sensors with <pose> tags. -->
+
+  <link name="linkSensorNoPose">
+    <inertial>
+      <mass value="100"/>
+      <origin rpy="1 3 4" xyz="0 -1.5 0"/>
+      <inertia ixx="2" ixy="0" ixz="0" iyy="3" iyz="0" izz="4"/>
+    </inertial>
+  </link>
+  <joint name="jointSensorNoPose" type="fixed">
+    <origin rpy="0 0 1.57079632679" xyz="333 0 0"/>
+    <parent link="link0"/>
+    <child link="linkSensorNoPose"/>
+  </joint>
+  <gazebo reference="linkSensorNoPose">
+    <sensor name="sensorNoPose" type="camera">
+      <update_rate>6.0</update_rate>
+      <camera name="cam">
+        <horizontal_fov>1.36869112579</horizontal_fov>
+        <image>
+          <width>1232</width>
+          <height>1616</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+      </camera>
+    </sensor>
+  </gazebo>
+
+  <link name="linkSensorPose">
+    <inertial>
+      <mass value="100"/>
+      <origin rpy="1 3 4" xyz="0 -1.5 0"/>
+      <inertia ixx="2" ixy="0" ixz="0" iyy="3" iyz="0" izz="4"/>
+    </inertial>
+  </link>
+  <joint name="jointSensorPose" type="fixed">
+    <origin rpy="0 0 1.57079632679" xyz="333 0 0"/>
+    <parent link="link0"/>
+    <child link="linkSensorPose"/>
+  </joint>
+  <gazebo reference="linkSensorPose">
+    <sensor name="sensorPose" type="camera">
+      <pose>111 0 0 0 0 -1</pose>
+      <update_rate>6.0</update_rate>
+      <camera name="cam">
+        <horizontal_fov>1.36869112579</horizontal_fov>
+        <image>
+          <width>1232</width>
+          <height>1616</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+      </camera>
+    </sensor>
+  </gazebo>
+
+  <link name="linkSensorPoseRelative">
+    <inertial>
+      <mass value="100"/>
+      <origin rpy="1 3 4" xyz="0 -1.5 0"/>
+      <inertia ixx="2" ixy="0" ixz="0" iyy="3" iyz="0" izz="4"/>
+    </inertial>
+  </link>
+  <joint name="jointSensorPoseRelative" type="fixed">
+    <origin rpy="0 0 1.57079632679" xyz="333 0 0"/>
+    <parent link="link0"/>
+    <child link="linkSensorPoseRelative"/>
+  </joint>
+  <gazebo reference="linkSensorPoseRelative">
+    <sensor name="sensorPoseRelative" type="camera">
+      <pose relative_to="link0">111 0 0 0 0 -1</pose>
+      <update_rate>6.0</update_rate>
+      <camera name="cam">
+        <horizontal_fov>1.36869112579</horizontal_fov>
+        <image>
+          <width>1232</width>
+          <height>1616</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+      </camera>
+    </sensor>
+  </gazebo>
+
+  <link name="linkSensorPoseTwoLevel">
+    <inertial>
+      <mass value="100"/>
+      <origin rpy="1 3 4" xyz="0 -1.5 0"/>
+      <inertia ixx="2" ixy="0" ixz="0" iyy="3" iyz="0" izz="4"/>
+    </inertial>
+  </link>
+  <joint name="jointSensorPoseTwoLevel" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 222"/>
+    <parent link="link0"/>
+    <child link="linkSensorPoseTwoLevel"/>
+  </joint>
+  <link name="linkSensorPoseTwoLevel2">
+    <inertial>
+      <mass value="100"/>
+      <origin rpy="1 3 4" xyz="0 -1.5 0"/>
+      <inertia ixx="2" ixy="0" ixz="0" iyy="3" iyz="0" izz="4"/>
+    </inertial>
+  </link>
+  <joint name="jointSensorPoseTwoLevel2" type="fixed">
+    <origin rpy="0 0 1.57079632679" xyz="333 0 0"/>
+    <parent link="linkSensorPoseTwoLevel"/>
+    <child link="linkSensorPoseTwoLevel2"/>
+  </joint>
+  <gazebo reference="linkSensorPoseTwoLevel2">
+    <sensor name="sensorPoseTwoLevel" type="camera">
+      <pose twoLevel_to="link0">111 0 0 0 0 -1</pose>
+      <update_rate>6.0</update_rate>
+      <camera name="cam">
+        <horizontal_fov>1.36869112579</horizontal_fov>
+        <image>
+          <width>1232</width>
+          <height>1616</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+      </camera>
+    </sensor>
+  </gazebo>
+
+  <!-- Issue 378 setting -->
+  <gazebo reference="issue378_link">
+    <sensor name="issue378_sensor" type="imu">
+      <always_on>1</always_on>
+      <update_rate>400</update_rate>
+      <pose>1.0 2.0 3.0 0.1 0.2 0.3</pose>
+    </sensor>
+  </gazebo>
+  <link name="issue378_link"/>
+  <joint name="issue378_link_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 -0 0"/>
+    <axis xyz="0 0 0"/>
+    <parent link="link0"/>
+    <child link="issue378_link"/>
+  </joint>
+
+  <!-- Issue 67 setting -->
+  <link name="Camera">
+    <inertial>
+      <origin xyz="-7.4418E-06 0.0043274 -0.010112" rpy="0 0 0"/>
+      <mass value="0.10621"/>
+      <inertia ixx="7.3134E-05" ixy="7.9651E-09" ixz="-8.9146E-09"
+              iyy="3.0769E-05" iyz="-3.9082E-06"
+              izz="9.2194E-05"/>
+    </inertial>
+  </link>
+  <joint name="jCamera" type="fixed">
+    <origin xyz="-0.20115 0.42488 0.30943" rpy="1.5708 -0.89012 1.5708"/>
+    <parent link="link0"/>
+    <child link="Camera"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+  <gazebo reference="Camera">
+    <sensor name="issue67_sensor" type="camera">
+      <visualize>true</visualize>
+      <pose>1 1 1 1.570796 1.570796 1.570796</pose>
+      <camera>
+      </camera>
+    </sensor>
+  </gazebo>
+
 </robot>

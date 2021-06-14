@@ -85,7 +85,7 @@
     </element>
 
     <element name="collide_bitmask" type="unsigned int" default="65535" required="0">
-      <description>Bitmask for collision filtering. This will override collide_without_contact</description>
+      <description>Bitmask for collision filtering. This will override collide_without_contact. Parsed as 16-bit unsigned integer.</description>
     </element>
 
     <element name="poissons_ratio" type="double" default="0.3" required="0">

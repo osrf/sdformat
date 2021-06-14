@@ -540,6 +540,27 @@ bool Element::GetAttributeSet(const std::string &_key) const
 }
 
 /////////////////////////////////////////////////
+void Element::RemoveAttribute(const std::string &_key)
+{
+  Param_V::const_iterator iter;
+  for (iter = this->dataPtr->attributes.begin();
+      iter != this->dataPtr->attributes.end(); ++iter)
+  {
+    if ((*iter)->GetKey() == _key)
+    {
+      this->dataPtr->attributes.erase(iter);
+      break;
+    }
+  }
+}
+
+/////////////////////////////////////////////////
+void Element::RemoveAllAttributes()
+{
+  this->dataPtr->attributes.clear();
+}
+
+/////////////////////////////////////////////////
 ParamPtr Element::GetAttribute(const std::string &_key) const
 {
   Param_V::const_iterator iter;

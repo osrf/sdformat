@@ -104,6 +104,17 @@
     </description>
   </element>
 
+  <element name="particle_scatter_ratio" type="float" default="0.65" required="0">
+    <description>
+    This is used to determine the ratio of particles that will be detected
+    by sensors. Increasing the ratio means there is a higher chance of
+    particles reflecting and interfering with depth sensing, making the
+    emitter appear more dense. Decreasing the ratio decreases the chance
+    of particles reflecting and interfering with depth sensing, making it
+    appear less dense.
+    </description>
+  </element>
+
   <include filename="pose.sdf" required="0"/>
   <include filename="material.sdf" required="0"/>
 </element>

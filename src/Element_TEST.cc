@@ -154,6 +154,40 @@ TEST(Element, GetAttributeSet)
 }
 
 /////////////////////////////////////////////////
+TEST(Element, RemoveAttribute)
+{
+  sdf::Element elem;
+  ASSERT_EQ(elem.GetAttributeCount(), 0UL);
+
+  elem.AddAttribute("test", "string", "foo", false, "foo description");
+  elem.AddAttribute("attr", "float", "0.0", false, "float description");
+  ASSERT_EQ(elem.GetAttributeCount(), 2UL);
+
+  elem.RemoveAttribute("test");
+  EXPECT_EQ(elem.GetAttributeCount(), 1UL);
+  EXPECT_EQ(elem.GetAttribute("test"), nullptr);
+  EXPECT_NE(elem.GetAttribute("attr"), nullptr);
+}
+
+/////////////////////////////////////////////////
+TEST(Element, RemoveAllAttributes)
+{
+  sdf::Element elem;
+  ASSERT_EQ(elem.GetAttributeCount(), 0UL);
+
+  elem.AddAttribute("test", "string", "foo", false, "foo description");
+  elem.AddAttribute("test2", "string", "foo", false, "foo description");
+  elem.AddAttribute("attr", "float", "0.0", false, "float description");
+  ASSERT_EQ(elem.GetAttributeCount(), 3UL);
+
+  elem.RemoveAllAttributes();
+  EXPECT_EQ(elem.GetAttributeCount(), 0UL);
+  EXPECT_EQ(elem.GetAttribute("test"), nullptr);
+  EXPECT_EQ(elem.GetAttribute("test2"), nullptr);
+  EXPECT_EQ(elem.GetAttribute("attr"), nullptr);
+}
+
+/////////////////////////////////////////////////
 TEST(Element, Include)
 {
   sdf::Element elem;

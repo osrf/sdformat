@@ -241,6 +241,13 @@ namespace sdf
     /// \return True if the attribute is set, false otherwise.
     public: bool GetAttributeSet(const std::string &_key) const;
 
+    /// \brief Remove an attribute.
+    /// \param[in] _key the key of the attribute.
+    public: void RemoveAttribute(const std::string &_key);
+
+    /// \brief Removes all attributes.
+    public: void RemoveAllAttributes();
+
     /// \brief Get the param of the elements value
     /// return A Param pointer to the value of this element.
     public: ParamPtr GetValue() const;

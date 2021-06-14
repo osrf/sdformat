@@ -104,6 +104,10 @@ TEST(DOMParticleEmitter, Construction)
   emitter.SetTopic("/test/topic");
   EXPECT_EQ("/test/topic", emitter.Topic());
 
+  EXPECT_FLOAT_EQ(0.65f, emitter.ScatterRatio());
+  emitter.SetScatterRatio(0.5f);
+  EXPECT_FLOAT_EQ(0.5f, emitter.ScatterRatio());
+
   EXPECT_EQ(ignition::math::Pose3d::Zero, emitter.RawPose());
   emitter.SetRawPose(ignition::math::Pose3d(1, 2, 3, 0, 0, 1.5707));
   EXPECT_EQ(ignition::math::Pose3d(1, 2, 3, 0, 0, 1.5707), emitter.RawPose());
