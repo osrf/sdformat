@@ -27,7 +27,7 @@
 #include "sdf/Error.hh"
 #include "sdf/Filesystem.hh"
 #include "sdf/Imu.hh"
-#include "sdf/SatNav.hh"
+#include "sdf/NavSat.hh"
 #include "sdf/Link.hh"
 #include "sdf/Magnetometer.hh"
 #include "sdf/Model.hh"
@@ -354,24 +354,24 @@ TEST(DOMLink, Sensors)
   EXPECT_EQ(ignition::math::Pose3d(10, 11, 12, 0, 0, 0),
       forceTorqueSensor->RawPose());
 
-  // Get the satnav sensor
-  const sdf::Sensor *satNavSensor = link->SensorByName("satnav_sensor");
-  ASSERT_NE(nullptr, satNavSensor);
-  EXPECT_EQ("satnav_sensor", satNavSensor->Name());
-  EXPECT_EQ(sdf::SensorType::SATNAV, satNavSensor->Type());
+  // Get the navsat sensor
+  const sdf::Sensor *navSatSensor = link->SensorByName("navsat_sensor");
+  ASSERT_NE(nullptr, navSatSensor);
+  EXPECT_EQ("navsat_sensor", navSatSensor->Name());
+  EXPECT_EQ(sdf::SensorType::NAVSAT, navSatSensor->Type());
   EXPECT_EQ(ignition::math::Pose3d(13, 14, 15, 0, 0, 0),
-      satNavSensor->RawPose());
-  const sdf::SatNav *satNavSensorObj = satNavSensor->SatNavSensor();
-  ASSERT_NE(nullptr, satNavSensorObj);
+      navSatSensor->RawPose());
+  const sdf::NavSat *navSatSensorObj = navSatSensor->NavSatSensor();
+  ASSERT_NE(nullptr, navSatSensorObj);
 
-  EXPECT_DOUBLE_EQ(1.2, satNavSensorObj->HorizontalPositionNoise().Mean());
-  EXPECT_DOUBLE_EQ(3.4, satNavSensorObj->HorizontalPositionNoise().StdDev());
-  EXPECT_DOUBLE_EQ(5.6, satNavSensorObj->VerticalPositionNoise().Mean());
-  EXPECT_DOUBLE_EQ(7.8, satNavSensorObj->VerticalPositionNoise().StdDev());
-  EXPECT_DOUBLE_EQ(9.1, satNavSensorObj->HorizontalVelocityNoise().Mean());
-  EXPECT_DOUBLE_EQ(10.11, satNavSensorObj->HorizontalVelocityNoise().StdDev());
-  EXPECT_DOUBLE_EQ(12.13, satNavSensorObj->VerticalVelocityNoise().Mean());
-  EXPECT_DOUBLE_EQ(14.15, satNavSensorObj->VerticalVelocityNoise().StdDev());
+  EXPECT_DOUBLE_EQ(1.2, navSatSensorObj->HorizontalPositionNoise().Mean());
+  EXPECT_DOUBLE_EQ(3.4, navSatSensorObj->HorizontalPositionNoise().StdDev());
+  EXPECT_DOUBLE_EQ(5.6, navSatSensorObj->VerticalPositionNoise().Mean());
+  EXPECT_DOUBLE_EQ(7.8, navSatSensorObj->VerticalPositionNoise().StdDev());
+  EXPECT_DOUBLE_EQ(9.1, navSatSensorObj->HorizontalVelocityNoise().Mean());
+  EXPECT_DOUBLE_EQ(10.11, navSatSensorObj->HorizontalVelocityNoise().StdDev());
+  EXPECT_DOUBLE_EQ(12.13, navSatSensorObj->VerticalVelocityNoise().Mean());
+  EXPECT_DOUBLE_EQ(14.15, navSatSensorObj->VerticalVelocityNoise().StdDev());
 
   // Get the gpu_ray sensor
   const sdf::Sensor *gpuRaySensor = link->SensorByName("gpu_ray_sensor");

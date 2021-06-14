@@ -14,8 +14,8 @@
  * limitations under the License.
  *
  */
-#ifndef SDF_SATNAV_HH_
-#define SDF_SATNAV_HH_
+#ifndef SDF_NAVSAT_HH_
+#define SDF_NAVSAT_HH_
 
 #include <sdf/Error.hh>
 #include <sdf/Element.hh>
@@ -29,19 +29,19 @@ namespace sdf
   // Inline bracket to help doxygen filtering.
   inline namespace SDF_VERSION_NAMESPACE {
   //
-  class SatNavPrivate;
+  class NavSatPrivate;
 
-  /// \brief SatNav contains information about a SatNav sensor.
-  /// This sensor can be attached to a link. The SatNav sensor can be defined
-  /// SDF XML by the "satnav" type.
+  /// \brief NavSat contains information about a NavSat sensor.
+  /// This sensor can be attached to a link. The NavSat sensor can be defined
+  /// SDF XML by the "navsat" type.
   ///
-  /// # Example SDF XML using satnav type:
+  /// # Example SDF XML using navsat type:
   ///
   /// ~~~{.xml}
-  /// <sensor name="satnav_sensor" type="satnav">
+  /// <sensor name="navsat_sensor" type="navsat">
   ///   <pose>1 2 3 0 0 0</pose>
-  ///   <topic>/satnav</topic>
-  ///   <satnav>
+  ///   <topic>/navsat</topic>
+  ///   <navsat>
   ///     <position_sensing>
   ///       <horizontal>
   ///         <noise type="gaussian">
@@ -70,36 +70,36 @@ namespace sdf
   ///         </noise>
   ///       </vertical>
   ///     </velocity_sensing>
-  ///   </satnav>
+  ///   </navsat>
   /// </sensor>
   /// ~~~
-  class SDFORMAT_VISIBLE SatNav
+  class SDFORMAT_VISIBLE NavSat
   {
     /// \brief Default constructor
-    public: SatNav();
+    public: NavSat();
 
     /// \brief Copy constructor
-    /// \param[in] _satnav SatNav to copy.
-    public: SatNav(const SatNav &_satnav);
+    /// \param[in] _navsat NavSat to copy.
+    public: NavSat(const NavSat &_navsat);
 
     /// \brief Move constructor
-    /// \param[in] _satnav SatNav to move.
-    public: SatNav(SatNav &&_satnav) noexcept;
+    /// \param[in] _navsat NavSat to move.
+    public: NavSat(NavSat &&_navsat) noexcept;
 
     /// \brief Destructor
-    public: ~SatNav();
+    public: ~NavSat();
 
     /// \brief Assignment operator
-    /// \param[in] _satnav The satnav to set values from.
+    /// \param[in] _navsat The navsat to set values from.
     /// \return *this
-    public: SatNav &operator=(const SatNav &_satnav);
+    public: NavSat &operator=(const NavSat &_navsat);
 
     /// \brief Move assignment operator
-    /// \param[in] _satnav The satnav to set values from.
+    /// \param[in] _navsat The navsat to set values from.
     /// \return *this
-    public: SatNav &operator=(SatNav &&_satnav) noexcept;
+    public: NavSat &operator=(NavSat &&_navsat) noexcept;
 
-    /// \brief Load the satnav based on an element pointer. This is *not*
+    /// \brief Load the navsat based on an element pointer. This is *not*
     /// the usual entry point. Typical usage of the SDF DOM is through the Root
     /// object.
     /// \param[in] _sdf The SDF Element pointer
@@ -145,19 +145,19 @@ namespace sdf
     /// \return Noise values
     public: const Noise &VerticalVelocityNoise() const;
 
-    /// \brief Return true if both SatNav objects contain the same values.
-    /// \param[_in] _satnav SatNav value to compare.
-    /// \return True if 'this' == _satnav.
-    public: bool operator==(const SatNav &_satnav) const;
+    /// \brief Return true if both NavSat objects contain the same values.
+    /// \param[_in] _navsat NavSat value to compare.
+    /// \return True if 'this' == _navsat.
+    public: bool operator==(const NavSat &_navsat) const;
 
-    /// \brief Return true this SatNav object does not contain the same
+    /// \brief Return true this NavSat object does not contain the same
     /// values as the passed in parameter.
-    /// \param[_in] _satnav SatNav value to compare.
-    /// \return True if 'this' != _satnav.
-    public: bool operator!=(const SatNav &_satnav) const;
+    /// \param[_in] _navsat NavSat value to compare.
+    /// \return True if 'this' != _navsat.
+    public: bool operator!=(const NavSat &_navsat) const;
 
     /// \brief Private data pointer.
-    private: SatNavPrivate *dataPtr;
+    private: NavSatPrivate *dataPtr;
   };
   }
 }

@@ -35,10 +35,10 @@ namespace sdf
   class AirPressure;
   class Altimeter;
   class Camera;
-  class SatNav;
   class Imu;
   class Lidar;
   class Magnetometer;
+  class NavSat;
   class SensorPrivate;
   struct PoseRelativeToGraph;
 
@@ -66,8 +66,8 @@ namespace sdf
     /// \brief A force-torque sensor.
     FORCE_TORQUE = 5,
 
-    /// \brief A SatNav sensor, such as GPS.
-    SATNAV = 6,
+    /// \brief A GPS sensor.
+    GPS = 6,
 
     /// \brief A GPU based lidar sensor.
     GPU_LIDAR = 7,
@@ -110,7 +110,10 @@ namespace sdf
     RGBD_CAMERA = 19,
 
     /// \brief A thermal camera sensor
-    THERMAL_CAMERA = 20
+    THERMAL_CAMERA = 20,
+
+    /// \brief A NavSat sensor, such as GPS.
+    NAVSAT = 21
   };
 
   /// \brief Information about an SDF sensor.
@@ -288,17 +291,16 @@ namespace sdf
     /// \sa SensorType Type() const
     public: const Camera *CameraSensor() const;
 
-    /// \brief Set the SATNAV sensor.
-    /// \param[in] _satnav The SATNAV sensor.
-    public: void SetSatNavSensor(const SatNav &_satnav);
+    /// \brief Set the NAVSAT sensor.
+    /// \param[in] _navsat The NAVSAT sensor.
+    public: void SetNavSatSensor(const NavSat &_navsat);
 
-    /// \brief Get a pointer to an SATNAV sensor, or nullptr if the sensor
-    /// does not contain an SATNAV sensor.
-    /// \return Pointer to the sensor's SATNAV, or nullptr if the sensor
-    /// is not an SATNAV.
+    /// \brief Get a pointer to a NAVSAT sensor, or nullptr if the sensor
+    /// does not contain an NAVSAT sensor.
+    /// \return Pointer to the sensor's NAVSAT, or nullptr if the sensor
+    /// is not an NAVSAT.
     /// \sa SensorType Type() const
-    public: const SatNav *SatNavSensor() const;
-
+    public: const NavSat *NavSatSensor() const;
 
     /// \brief Set the IMU sensor.
     /// \param[in] _imu The IMU sensor.

@@ -14,13 +14,13 @@
  * limitations under the License.
  *
  */
-#include "sdf/SatNav.hh"
+#include "sdf/NavSat.hh"
 
 using namespace sdf;
 using namespace ignition;
 
-/// \brief Private satnav data.
-class sdf::SatNavPrivate
+/// \brief Private navsat data.
+class sdf::NavSatPrivate
 {
   /// \brief Noise values for the horizontal positioning sensor
   public: Noise horizontalPositionNoise;
@@ -39,45 +39,45 @@ class sdf::SatNavPrivate
 };
 
 //////////////////////////////////////////////////
-SatNav::SatNav()
-  : dataPtr(new SatNavPrivate)
+NavSat::NavSat()
+  : dataPtr(new NavSatPrivate)
 {
 }
 
 //////////////////////////////////////////////////
-SatNav::~SatNav()
+NavSat::~NavSat()
 {
   delete this->dataPtr;
   this->dataPtr = nullptr;
 }
 
 //////////////////////////////////////////////////
-SatNav::SatNav(const SatNav &_satnav)
-  : dataPtr(new SatNavPrivate(*_satnav.dataPtr))
+NavSat::NavSat(const NavSat &_navsat)
+  : dataPtr(new NavSatPrivate(*_navsat.dataPtr))
 {
 }
 
 //////////////////////////////////////////////////
-SatNav::SatNav(SatNav &&_satnav) noexcept
-  : dataPtr(std::exchange(_satnav.dataPtr, nullptr))
+NavSat::NavSat(NavSat &&_navsat) noexcept
+  : dataPtr(std::exchange(_navsat.dataPtr, nullptr))
 {
 }
 
 //////////////////////////////////////////////////
-SatNav &SatNav::operator=(const SatNav &_satnav)
+NavSat &NavSat::operator=(const NavSat &_navsat)
 {
-  return *this = SatNav(_satnav);
+  return *this = NavSat(_navsat);
 }
 
 //////////////////////////////////////////////////
-SatNav &SatNav::operator=(SatNav &&_satnav) noexcept
+NavSat &NavSat::operator=(NavSat &&_navsat) noexcept
 {
-  std::swap(this->dataPtr, _satnav.dataPtr);
+  std::swap(this->dataPtr, _navsat.dataPtr);
   return * this;
 }
 
 //////////////////////////////////////////////////
-Errors SatNav::Load(ElementPtr _sdf)
+Errors NavSat::Load(ElementPtr _sdf)
 {
   Errors errors;
 
@@ -87,22 +87,22 @@ Errors SatNav::Load(ElementPtr _sdf)
   if (!_sdf)
   {
     errors.push_back({ErrorCode::ELEMENT_MISSING,
-        "Attempting to load SATNAV, but the provided SDF "
+        "Attempting to load NAVSAT, but the provided SDF "
         "element is null."});
     return errors;
   }
 
-  // Check that the provided SDF element is a <satnav> element.
+  // Check that the provided SDF element is a <navsat> element.
   // This is an error that cannot be recovered, so return an error.
-  if (_sdf->GetName() != "satnav" && _sdf->GetName() != "gps")
+  if (_sdf->GetName() != "navsat" && _sdf->GetName() != "gps")
   {
     errors.push_back({ErrorCode::ELEMENT_INCORRECT_TYPE,
-        "Attempting to load SATNAV, but the provided SDF element is "
-        "not a <satnav>."});
+        "Attempting to load NAVSAT, but the provided SDF element is "
+        "not a <navsat>."});
     return errors;
   }
 
-  // Load satnav sensor properties
+  // Load navsat sensor properties
   if (_sdf->HasElement("position_sensing"))
   {
     sdf::ElementPtr elem = _sdf->GetElement("position_sensing");
@@ -144,83 +144,82 @@ Errors SatNav::Load(ElementPtr _sdf)
     }
   }
 
-
   return errors;
 }
 
 //////////////////////////////////////////////////
-sdf::ElementPtr SatNav::Element() const
+sdf::ElementPtr NavSat::Element() const
 {
   return this->dataPtr->sdf;
 }
 
 //////////////////////////////////////////////////
-const Noise &SatNav::HorizontalPositionNoise() const
+const Noise &NavSat::HorizontalPositionNoise() const
 {
   return this->dataPtr->horizontalPositionNoise;
 }
 
 //////////////////////////////////////////////////
-void SatNav::SetHorizontalPositionNoise(const Noise &_noise)
+void NavSat::SetHorizontalPositionNoise(const Noise &_noise)
 {
   this->dataPtr->horizontalPositionNoise = _noise;
 }
 
 //////////////////////////////////////////////////
-const Noise &SatNav::HorizontalVelocityNoise() const
+const Noise &NavSat::HorizontalVelocityNoise() const
 {
   return this->dataPtr->horizontalVelocityNoise;
 }
 
 //////////////////////////////////////////////////
-void SatNav::SetHorizontalVelocityNoise(const Noise &_noise)
+void NavSat::SetHorizontalVelocityNoise(const Noise &_noise)
 {
   this->dataPtr->horizontalVelocityNoise = _noise;
 }
 
 //////////////////////////////////////////////////
-const Noise &SatNav::VerticalPositionNoise() const
+const Noise &NavSat::VerticalPositionNoise() const
 {
   return this->dataPtr->verticalPositionNoise;
 }
 
 //////////////////////////////////////////////////
-void SatNav::SetVerticalPositionNoise(const Noise &_noise)
+void NavSat::SetVerticalPositionNoise(const Noise &_noise)
 {
   this->dataPtr->verticalPositionNoise = _noise;
 }
 
 //////////////////////////////////////////////////
-const Noise &SatNav::VerticalVelocityNoise() const
+const Noise &NavSat::VerticalVelocityNoise() const
 {
   return this->dataPtr->verticalVelocityNoise;
 }
 
 //////////////////////////////////////////////////
-void SatNav::SetVerticalVelocityNoise(const Noise &_noise)
+void NavSat::SetVerticalVelocityNoise(const Noise &_noise)
 {
   this->dataPtr->verticalVelocityNoise = _noise;
 }
 
 //////////////////////////////////////////////////
-bool SatNav::operator==(const SatNav &_satnav) const
+bool NavSat::operator==(const NavSat &_navsat) const
 {
-  if (this->dataPtr->verticalPositionNoise != _satnav.VerticalPositionNoise())
+  if (this->dataPtr->verticalPositionNoise != _navsat.VerticalPositionNoise())
     return false;
   if (this->dataPtr->horizontalPositionNoise !=
-      _satnav.HorizontalPositionNoise())
+      _navsat.HorizontalPositionNoise())
     return false;
-  if (this->dataPtr->verticalVelocityNoise != _satnav.VerticalVelocityNoise())
+  if (this->dataPtr->verticalVelocityNoise != _navsat.VerticalVelocityNoise())
     return false;
   if (this->dataPtr->horizontalVelocityNoise !=
-      _satnav.HorizontalVelocityNoise())
+      _navsat.HorizontalVelocityNoise())
     return false;
 
   return true;
 }
 
 //////////////////////////////////////////////////
-bool SatNav::operator!=(const SatNav &_satnav) const
+bool NavSat::operator!=(const NavSat &_navsat) const
 {
-  return !(*this == _satnav);
+  return !(*this == _navsat);
 }

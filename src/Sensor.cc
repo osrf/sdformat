@@ -22,7 +22,7 @@
 #include "sdf/Altimeter.hh"
 #include "sdf/Camera.hh"
 #include "sdf/Error.hh"
-#include "sdf/SatNav.hh"
+#include "sdf/NavSat.hh"
 #include "sdf/Imu.hh"
 #include "sdf/Magnetometer.hh"
 #include "sdf/Lidar.hh"
@@ -42,7 +42,7 @@ const std::vector<std::string> sensorTypeStrs =
   "contact",
   "depth_camera",
   "force_torque",
-  "satnav",
+  "gps",
   "gpu_lidar",
   "imu",
   "logical_camera",
@@ -56,7 +56,8 @@ const std::vector<std::string> sensorTypeStrs =
   "wireless_transmitter",
   "air_pressure",
   "rgbd_camera",
-  "thermal_camera"
+  "thermal_camera",
+  "navsat"
 };
 
 class sdf::SensorPrivate
@@ -80,9 +81,9 @@ class sdf::SensorPrivate
       this->magnetometer = std::make_unique<sdf::Magnetometer>(
           *_sensor.magnetometer);
     }
-    if (_sensor.satNav)
+    if (_sensor.navSat)
     {
-      this->satNav = std::make_unique<sdf::SatNav>(*_sensor.satNav);
+      this->navSat = std::make_unique<sdf::NavSat>(*_sensor.navSat);
     }
     if (_sensor.altimeter)
     {
@@ -142,8 +143,8 @@ class sdf::SensorPrivate
   /// \brief Pointer to an altimeter.
   public: std::unique_ptr<Altimeter> altimeter;
 
-  /// \brief Pointer to SATNAV sensor.
-  public: std::unique_ptr<SatNav> satNav;
+  /// \brief Pointer to NAVSAT sensor.
+  public: std::unique_ptr<NavSat> navSat;
 
   /// \brief Pointer to an air pressure sensor.
   public: std::unique_ptr<AirPressure> airPressure;
@@ -229,8 +230,8 @@ bool Sensor::operator==(const Sensor &_sensor) const
       return *(this->dataPtr->airPressure) == *(_sensor.dataPtr->airPressure);
     case SensorType::IMU:
       return *(this->dataPtr->imu) == *(_sensor.dataPtr->imu);
-    case SensorType::SATNAV:
-      return *(this->dataPtr->satNav) == *(_sensor.dataPtr->satNav);
+    case SensorType::NAVSAT:
+      return *(this->dataPtr->navSat) == *(_sensor.dataPtr->navSat);
     case SensorType::CAMERA:
     case SensorType::DEPTH_CAMERA:
     case SensorType::RGBD_CAMERA:
@@ -350,12 +351,12 @@ Errors Sensor::Load(ElementPtr _sdf)
   {
     this->dataPtr->type = SensorType::FORCE_TORQUE;
   }
-  else if (type == "satnav" || type == "gps")
+  else if (type == "navsat" || type == "gps")
   {
-    this->dataPtr->type = SensorType::SATNAV;
-    this->dataPtr->satNav.reset(new SatNav());
-    Errors err = this->dataPtr->satNav->Load(
-      _sdf->GetElement(_sdf->HasElement("satnav") ? "satnav" : "gps"));
+    this->dataPtr->type = SensorType::NAVSAT;
+    this->dataPtr->navSat.reset(new NavSat());
+    Errors err = this->dataPtr->navSat->Load(
+      _sdf->GetElement(_sdf->HasElement("navsat") ? "navsat" : "gps"));
     errors.insert(errors.end(), err.begin(), err.end());
   }
   else if (type == "gpu_ray" || type == "gpu_lidar")
@@ -617,15 +618,15 @@ const Camera *Sensor::CameraSensor() const
 }
 
 /////////////////////////////////////////////////
-void Sensor::SetSatNavSensor(const SatNav &_gps)
+void Sensor::SetNavSatSensor(const NavSat &_gps)
 {
-  this->dataPtr->satNav = std::make_unique<SatNav>(_gps);
+  this->dataPtr->navSat = std::make_unique<NavSat>(_gps);
 }
 
 /////////////////////////////////////////////////
-const SatNav *Sensor::SatNavSensor() const
+const NavSat *Sensor::NavSatSensor() const
 {
-  return this->dataPtr->satNav.get();
+  return this->dataPtr->navSat.get();
 }
 
 /////////////////////////////////////////////////

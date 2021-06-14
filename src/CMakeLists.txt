@@ -27,7 +27,6 @@ set (sources
   FrameSemantics.cc
   Filesystem.cc
   Geometry.cc
-  SatNav.cc
   Gui.cc
   Heightmap.cc
   ign.cc
@@ -41,6 +40,7 @@ set (sources
   Material.cc
   Mesh.cc
   Model.cc
+  NavSat.cc
   Noise.cc
   parser.cc
   parser_urdf.cc
@@ -98,7 +98,6 @@ if (BUILD_SDF_TEST)
     Frame_TEST.cc
     Filesystem_TEST.cc
     Geometry_TEST.cc
-    SatNav_TEST.cc
     Gui_TEST.cc
     Heightmap_TEST.cc
     Imu_TEST.cc
@@ -111,6 +110,7 @@ if (BUILD_SDF_TEST)
     Material_TEST.cc
     Mesh_TEST.cc
     Model_TEST.cc
+    NavSat_TEST.cc
     Noise_TEST.cc
     Param_TEST.cc
     parser_TEST.cc

@@ -17,7 +17,6 @@ set (headers
   Filesystem.hh
   Frame.hh
   Geometry.hh
-  SatNav.hh
   Gui.hh
   Heightmap.hh
   Imu.hh
@@ -30,6 +29,7 @@ set (headers
   Material.hh
   Mesh.hh
   Model.hh
+  NavSat.hh
   Noise.hh
   Param.hh
   parser.hh
