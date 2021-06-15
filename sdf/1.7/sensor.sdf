@@ -62,6 +62,7 @@
   <include filename="lidar.sdf" required="0"/>
   <include filename="logical_camera.sdf" required="0"/>
   <include filename="magnetometer.sdf" required="0"/>
+  <include filename="navsat.sdf" required="0"/>
   <include filename="ray.sdf" required="0"/>
   <include filename="rfid.sdf" required="0"/>
   <include filename="rfidtag.sdf" required="0"/>
