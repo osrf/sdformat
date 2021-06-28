@@ -49,46 +49,69 @@ TEST(Pose1_9, ModelPoses)
   const sdf::World *world = root.WorldByIndex(0);
   ASSERT_NE(nullptr, world);
 
-  std::cout << "model_with_empty_pose" << std::endl;
   const sdf::Model *model = world->ModelByIndex(0);
   ASSERT_NE(nullptr, model);
   ASSERT_EQ("model_with_empty_pose", model->Name());
   EXPECT_EQ(Pose::Zero, model->RawPose());
 
-  std::cout << "model_with_empty_pose_with_attribute_true" << std::endl;
   model = world->ModelByIndex(1);
   ASSERT_NE(nullptr, model);
-  ASSERT_EQ("model_with_empty_pose_with_attribute_true", model->Name());
+  ASSERT_EQ("model_with_empty_pose_with_degrees", model->Name());
   EXPECT_EQ(Pose::Zero, model->RawPose());
 
-  std::cout << "model_with_empty_pose_with_attribute_false" << std::endl;
   model = world->ModelByIndex(2);
   ASSERT_NE(nullptr, model);
-  ASSERT_EQ("model_with_empty_pose_with_attribute_false", model->Name());
+  ASSERT_EQ("model_with_empty_pose_with_quaternion", model->Name());
   EXPECT_EQ(Pose::Zero, model->RawPose());
 
-  std::cout << "model_with_rpy_pose_no_attribute" << std::endl;
   model = world->ModelByIndex(3);
   ASSERT_NE(nullptr, model);
   ASSERT_EQ("model_with_rpy_pose_no_attribute", model->Name());
   EXPECT_EQ(Pose(1, 2, 3, 0.4, 0.5, 0.6), model->RawPose());
 
-  std::cout << "model_with_rpy_pose_with_attribute_true" << std::endl;
   model = world->ModelByIndex(4);
   ASSERT_NE(nullptr, model);
-  ASSERT_EQ("model_with_rpy_pose_with_attribute_true", model->Name());
+  ASSERT_EQ("model_with_rpy_pose_with_degrees", model->Name());
   EXPECT_EQ(Pose(1, 2, 3, IGN_DTOR(0.4), IGN_DTOR(0.5), IGN_DTOR(0.6)),
       model->RawPose());
 
-  std::cout << "model_with_rpy_pose_with_attribute_false" << std::endl;
   model = world->ModelByIndex(5);
   ASSERT_NE(nullptr, model);
-  ASSERT_EQ("model_with_rpy_pose_with_attribute_false", model->Name());
+  ASSERT_EQ("model_with_rpy_pose_with_radians", model->Name());
   EXPECT_EQ(Pose(1, 2, 3, 0.4, 0.5, 0.6), model->RawPose());
 
-  std::cout << "model_with_quaternion" << std::endl;
   model = world->ModelByIndex(6);
   ASSERT_NE(nullptr, model);
+  ASSERT_EQ("model_with_quaternion_no_attribute", model->Name());
+  EXPECT_EQ(Pose(1, 2, 3, 0.7071068, 0.7071068, 0, 0), model->RawPose());
+
+  model = world->ModelByIndex(7);
+  ASSERT_NE(nullptr, model);
   ASSERT_EQ("model_with_quaternion", model->Name());
+  EXPECT_EQ(Pose(1, 2, 3, 0.7071068, 0.7071068, 0, 0), model->RawPose());
+
+  model = world->ModelByIndex(8);
+  ASSERT_NE(nullptr, model);
+  ASSERT_EQ("model_with_single_space_delimiter", model->Name());
+  EXPECT_EQ(Pose(1, 2, 3, 0.4, 0.5, 0.6), model->RawPose());
+
+  model = world->ModelByIndex(9);
+  ASSERT_NE(nullptr, model);
+  ASSERT_EQ("model_with_newline_delimiter", model->Name());
+  EXPECT_EQ(Pose(1, 2, 3, 0.4, 0.5, 0.6), model->RawPose());
+
+  model = world->ModelByIndex(10);
+  ASSERT_NE(nullptr, model);
+  ASSERT_EQ("model_with_newline_delimiter_quaternion", model->Name());
+  EXPECT_EQ(Pose(1, 2, 3, 0.7071068, 0.7071068, 0, 0), model->RawPose());
+
+  model = world->ModelByIndex(11);
+  ASSERT_NE(nullptr, model);
+  ASSERT_EQ("model_with_messy_delimiters", model->Name());
+  EXPECT_EQ(Pose(1, 2, 3, 0.4, 0.5, 0.6), model->RawPose());
+
+  model = world->ModelByIndex(12);
+  ASSERT_NE(nullptr, model);
+  ASSERT_EQ("model_with_messy_delimiters_quaternion", model->Name());
   EXPECT_EQ(Pose(1, 2, 3, 0.7071068, 0.7071068, 0, 0), model->RawPose());
 }

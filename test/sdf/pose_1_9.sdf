@@ -7,35 +7,80 @@
       <link name="link"/>
     </model>
 
-    <model name="model_with_empty_pose_with_attribute_true">
-      <pose degrees="true"></pose> 
+    <model name="model_with_empty_pose_with_degrees">
+      <pose rotation_type="rpy_degrees"></pose> 
       <link name="link"/>
     </model>
 
-    <model name="model_with_empty_pose_with_attribute_false">
-      <pose degrees="false"></pose> 
+    <model name="model_with_empty_pose_with_quaternion">
+      <pose rotation_type="q_wxyz"></pose> 
       <link name="link"/>
     </model>
 
     <model name="model_with_rpy_pose_no_attribute">
-      <pose>1 2 3 0.4 0.5 0.6</pose>
+      <pose>1 2 3   0.4 0.5 0.6</pose>
       <link name="link"/>
     </model>
 
-    <model name="model_with_rpy_pose_with_attribute_true">
-      <pose degrees="true">1 2 3 0.4 0.5 0.6</pose>
+    <model name="model_with_rpy_pose_with_degrees">
+      <pose rotation_type="rpy_degrees">1 2 3   0.4 0.5 0.6</pose>
       <link name="link"/>
     </model>
 
-    <model name="model_with_rpy_pose_with_attribute_false">
-      <pose degrees="false">1 2 3 0.4 0.5 0.6</pose>
+    <model name="model_with_rpy_pose_with_radians">
+      <pose rotation_type="rpy_radians">1 2 3   0.4 0.5 0.6</pose>
+      <link name="link"/>
+    </model>
+
+    <model name="model_with_quaternion_no_attribute">
+      <pose>1 2 3   0.7071068 0.7071068 0 0</pose>
       <link name="link"/>
     </model>
 
     <model name="model_with_quaternion">
-      <pose>1 2 3 0.7071068 0.7071068 0 0</pose>
+      <pose rotation_type="q_wxyz">1 2 3   0.7071068 0.7071068 0 0</pose>
       <link name="link"/>
     </model>
 
+    <model name="model_with_single_space_delimiter">
+      <pose>1 2 3 0.4 0.5 0.6</pose>
+      <link name="link"/>
+    </model>
+
+    <model name="model_with_newline_delimiter">
+      <pose>
+        1 2 3
+        0.4 0.5 0.6
+      </pose>
+      <link name="link"/>
+    </model>
+
+    <model name="model_with_newline_delimiter_quaternion">
+      <pose rotation_type="q_wxyz">
+        1 2 3
+        0.7071068 0.7071068 0 0
+      </pose>
+      <link name="link"/>
+    </model>
+
+    <model name="model_with_messy_delimiters">
+      <pose>
+        1 2 3
+        0.4
+        0.5 0.6
+      </pose>
+      <link name="link"/>
+    </model>
+
+    <model name="model_with_messy_delimiters_quaternion">
+      <pose rotation_type="q_wxyz">
+        1 2
+        3
+        0.7071068
+        0.7071068 0 0
+      </pose>
+      <link name="link"/>
+    </model>
+  
   </world>
 </sdf>
