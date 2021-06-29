@@ -2,6 +2,7 @@
 
 require "rexml/document"
 require "optparse"
+require "set"
 
 $path = nil
 
@@ -79,6 +80,11 @@ def printElem(_file, _spaces, _elem)
     _elem.get_elements("element").each do |elem|
       printElem(_file, _spaces+6, elem)
     end
+
+    _elem.get_elements("include").each do |inc|
+      printInclude(_file, _spaces+6, inc)
+    end
+
     _file.printf("%*s</xsd:choice>\n", _spaces+4, "")
 
     # Print the attributes for the complex type
@@ -89,18 +95,43 @@ def printElem(_file, _spaces, _elem)
 
     _file.printf("%*s</xsd:complexType>\n", _spaces+2, "")
   else
-    _file.printf("%*s<xsd:element name='%s' type='%s'>\n",
-                 _spaces, "", _elem.attributes["name"], type)
+
+    attributes = _elem.get_elements("attribute")
+    hasAttributes = attributes.size > 0
+
+    if hasAttributes
+      _file.printf("%*s<xsd:element name='%s'>\n",
+                    _spaces, "", _elem.attributes["name"])
+    else
+      _file.printf("%*s<xsd:element name='%s' type='%s'>\n",
+                    _spaces, "", _elem.attributes["name"], type)
+    end
 
     if !_elem.elements["description"].nil? &&
        !_elem.elements["description"].text.nil?
       printDocumentation(_file, _spaces+2, _elem.elements["description"].text)
     end
+
+    if hasAttributes
+      _file.printf("%*s<xsd:complexType>\n", _spaces+2, "")
+      _file.printf("%*s<xsd:simpleContent>\n", _spaces+4, "")
+      _file.printf("%*s<xsd:extension base='%s'>\n", _spaces+6, "", type)
+
+      # Print the attributes for the complex type
+      # Attributes must go at the end of the complex type.
+      attributes.each do |attr|
+        printAttribute(_file, _spaces+8, attr);
+      end
+
+      _file.printf("%*s</xsd:extension>\n", _spaces+6, "")
+      _file.printf("%*s</xsd:simpleContent>\n", _spaces+4, "")
+      _file.printf("%*s</xsd:complexType>\n", _spaces+2, "")
+    end
+
   end
 
   _file.printf("%*s</xsd:element>\n", _spaces, "")
   _file.printf("%*s</xsd:choice>\n", _spaces, "")
-
 end
 
 #################################################
@@ -121,18 +152,14 @@ def printDocumentation(_file, _spaces, _doc)
 end
 
 #################################################
-def printIncludeRef(_file, _spaces, _inc)
-  path = File.join($path, _inc.attributes["filename"])
-  doc = REXML::Document.new File.new(path)
-  incElemName = doc.root.attributes['name']
-  _file.printf("%*s<xsd:element ref='%s'/>\n", _spaces, "", incElemName)
-end
-
-#################################################
+# Prints XSD contents of <include>
 def printInclude(_file, _spaces, _attr)
-  loc = "http://sdformat.org/schemas/"
-  loc += _attr.attributes['filename'].sub("\.sdf","\.xsd")
-  _file.printf("%*s<xsd:include schemaLocation='%s'/>\n", _spaces, "", loc)
+  loc = $path + "/" + _attr.attributes['filename']
+  doc = REXML::Document.new File.new(loc)
+
+  doc.elements.each_with_index("element") do |elem, i|
+    printElem(_file, _spaces+2, elem)
+  end
 end
 
 #################################################
@@ -176,19 +203,6 @@ end
 # \param[in] _elem The SDF element to convert to an xml schema.
 def printXSD(_file, _spaces, _elem)
 
-  if !_elem.elements["description"].nil? &&
-     !_elem.elements["description"].text.nil?
-    printDocumentation(_file, _spaces, _elem.elements["description"].text)
-  end
-
-  _file.printf("%*s<xsd:include schemaLocation='http://sdformat.org/schemas/types.xsd'/>\n", _spaces, "")
-
-  # Print the inclues for the complex type
-  # The includes must appear first
-  _elem.get_elements("include").each do |inc|
-    printInclude(_file, _spaces, inc);
-  end
-
   if _elem.get_elements("element").size > 0 ||
      _elem.get_elements("attribute").size > 0 ||
      _elem.get_elements("include").size > 0
@@ -196,6 +210,12 @@ def printXSD(_file, _spaces, _elem)
     # Print the complex type with a name
     _file.printf("%*s<xsd:element name='%s'>\n", _spaces, "",
                  _elem.attributes["name"])
+
+    if !_elem.elements["description"].nil? &&
+      !_elem.elements["description"].text.nil?
+     printDocumentation(_file, _spaces+2, _elem.elements["description"].text)
+    end
+
     _file.printf("%*s<xsd:complexType>\n", _spaces+2, "")
 
     if _elem.attributes['name'] != "plugin" &&
@@ -209,10 +229,11 @@ def printXSD(_file, _spaces, _elem)
       printElem(_file, _spaces+6, elem);
     end
 
-    # Print all the included sdf's root elements
+    # print XSD of <include> element
     _elem.get_elements("include").each do |inc|
-      printIncludeRef(_file, _spaces+6, inc);
+      printInclude(_file, _spaces+4, inc);
     end
+
     if _elem.attributes['name'] != "plugin" &&
       (_elem.get_elements("element").size > 0 ||
        _elem.get_elements("include").size > 0)
@@ -294,6 +315,14 @@ doc.elements.each_with_index("element") do |elem, i|
 
   file.print("<?xml version='1.0' encoding='UTF-8'?>\n")
   file.print("<xsd:schema xmlns:xsd='http://www.w3.org/2001/XMLSchema'>\n")
+
+  # drop xml header
+  File.readlines("#{$path}/schema/types.xsd").drop(1).each do |line|
+    # skip root <schema> element
+    if !line.include? "xsd:schema"
+      file.printf("%*s#{line}", spaces-2, "")
+    end
+  end
 
   printXSD(file, spaces, elem)
 
