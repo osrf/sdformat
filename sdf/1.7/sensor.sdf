@@ -22,6 +22,7 @@
                   logical_camera,
                   magnetometer,
                   multicamera,
+                  navsat,
                   ray,
                   rfid,
                   rfidtag,
@@ -30,7 +31,7 @@
                   thermal_camera, thermal,
                   wireless_receiver, and
                   wireless_transmitter.
-      The "ray" and "gpu_ray" types are equivalent to "lidar" and "gpu_lidar", respectively. It is preferred to use "lidar" and "gpu_lidar" since "ray" and "gpu_ray" will be deprecated. The "ray" and "gpu_ray" types are maintained for legacy support.
+      The "ray", "gpu_ray", and "gps" types are equivalent to "lidar", "gpu_lidar", and "navsat", respectively. It is preferred to use "lidar", "gpu_lidar", and "navsat" since "ray", "gpu_ray", and "gps" will be deprecated. The "ray", "gpu_ray", and "gps" types are maintained for legacy support.
     </description>
   </attribute>
 
@@ -61,6 +62,7 @@
   <include filename="lidar.sdf" required="0"/>
   <include filename="logical_camera.sdf" required="0"/>
   <include filename="magnetometer.sdf" required="0"/>
+  <include filename="navsat.sdf" required="0"/>
   <include filename="ray.sdf" required="0"/>
   <include filename="rfid.sdf" required="0"/>
   <include filename="rfidtag.sdf" required="0"/>

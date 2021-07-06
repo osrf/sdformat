@@ -29,6 +29,7 @@ set (headers
   Material.hh
   Mesh.hh
   Model.hh
+  NavSat.hh
   Noise.hh
   Param.hh
   parser.hh
