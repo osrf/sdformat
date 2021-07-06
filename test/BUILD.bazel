@@ -1,0 +1,75 @@
+load(
+    "//ign_bazel:build_defs.bzl",
+    "IGNITION_ROOT",
+    "IGNITION_VISIBILITY",
+    "cmake_configure_file",
+    "generate_include_header",
+    "generate_yaml",
+)
+
+BINARY_DIR = "/tmp"
+
+SOURCE_DIR = "./sdformat"
+
+SDF_PROTOCOL_VERSION = 10
+
+# Generates config.hh based on the version numbers in CMake code.
+cmake_configure_file(
+    name = "test_config",
+    src = "test_config.h.in",
+    out = "test_config.h",
+    cmakelists = ["CMakeLists.txt"],
+    defines = [
+        "PROJECT_BINARY_DIR=%s" % BINARY_DIR,
+        "PROJECT_SOURCE_DIR=%s" % SOURCE_DIR,
+        "CMAKE_BINARY_DIR=%s" % BINARY_DIR,
+        "IGNITION-TOOLS_BINARY_DIRS=0",
+        "IGNITION-MSGS_BINARY_DIRS=0",
+        "IGNITION-MSGS_LIBRARY_DIRS=0",
+        "SDF_PROTOCOL_VERSION=%d" % SDF_PROTOCOL_VERSION,
+    ],
+    visibility = ["//visibility:private"],
+)
+
+cc_library(
+    name = "test_utils",
+    srcs = [
+        "test_config.h",
+        "env.hh",
+    ],
+    includes = ["."],
+    visibility = IGNITION_VISIBILITY,
+)
+
+[
+    cc_test(
+        name = "INTEGRATION_" + test.split("/")[1].replace(".cc", ""),
+        srcs = [test],
+        data = [
+            ":integration",
+            ":sdf",
+            IGNITION_ROOT + "sdformat:tools",
+        ],
+        includes = [
+            ".",
+            "integration",
+        ],
+        deps = [
+            ":test_utils",
+            IGNITION_ROOT + "sdformat",
+            "@gtest",
+            "@gtest//:gtest_main",
+        ],
+    )
+    for test in glob(
+        ["integration/*.cc"],
+        exclude = [
+            "integration/nested_model.cc",
+            "integration/schema_test.cc",
+        ],
+    )
+]
+
+exports_files(["sdf"])
+
+exports_files(["integration"])

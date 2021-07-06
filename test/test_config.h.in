@@ -89,7 +89,7 @@ namespace sdf
     {
       if (env("TEST_UNDECLARED_OUTPUTS_DIR", _homeDir)) 
       {
-        return true;
+        return setenv("HOME", _homeDir) && setenv("HOMEPATH", _homeDir);
       } 
       else
       {
