@@ -184,6 +184,12 @@ namespace sdf
     /// \param[in] _value New value for the parameter in string form.
     public: bool SetFromString(const std::string &_value);
 
+    /// \brief Set the parameter value from a string.
+    /// \param[in] _value New value for the parameter in string form.
+    /// \param[in] _attributes Attributes that are associated to this value.
+    public: bool SetFromString(const std::string &_value,
+                               const Param_V &_attributes);
+
     /// \brief Reset the parameter to the default value.
     public: void Reset();
 
@@ -275,7 +281,9 @@ namespace sdf
 
     /// \brief Private method to set the Element from a passed-in string.
     /// \param[in] _value Value to set the parameter to.
-    private: bool ValueFromString(const std::string &_value);
+    /// \param[in] _attributes Attributes associated with this value.
+    private: bool ValueFromString(const std::string &_value,
+                                  const Param_V &_attributes);
 
     /// \brief Private data
     private: std::unique_ptr<ParamPrivate> dataPtr;
