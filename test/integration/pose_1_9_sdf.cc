@@ -82,35 +82,30 @@ TEST(Pose1_9, ModelPoses)
 
   model = world->ModelByIndex(6);
   ASSERT_NE(nullptr, model);
-  ASSERT_EQ("model_with_quaternion_no_attribute", model->Name());
+  ASSERT_EQ("model_with_quaternion", model->Name());
   EXPECT_EQ(Pose(1, 2, 3, 0.7071068, 0.7071068, 0, 0), model->RawPose());
 
   model = world->ModelByIndex(7);
   ASSERT_NE(nullptr, model);
-  ASSERT_EQ("model_with_quaternion", model->Name());
-  EXPECT_EQ(Pose(1, 2, 3, 0.7071068, 0.7071068, 0, 0), model->RawPose());
-
-  model = world->ModelByIndex(8);
-  ASSERT_NE(nullptr, model);
   ASSERT_EQ("model_with_single_space_delimiter", model->Name());
   EXPECT_EQ(Pose(1, 2, 3, 0.4, 0.5, 0.6), model->RawPose());
 
-  model = world->ModelByIndex(9);
+  model = world->ModelByIndex(8);
   ASSERT_NE(nullptr, model);
   ASSERT_EQ("model_with_newline_delimiter", model->Name());
   EXPECT_EQ(Pose(1, 2, 3, 0.4, 0.5, 0.6), model->RawPose());
 
-  model = world->ModelByIndex(10);
+  model = world->ModelByIndex(9);
   ASSERT_NE(nullptr, model);
   ASSERT_EQ("model_with_newline_delimiter_quaternion", model->Name());
   EXPECT_EQ(Pose(1, 2, 3, 0.7071068, 0.7071068, 0, 0), model->RawPose());
 
-  model = world->ModelByIndex(11);
+  model = world->ModelByIndex(10);
   ASSERT_NE(nullptr, model);
   ASSERT_EQ("model_with_messy_delimiters", model->Name());
   EXPECT_EQ(Pose(1, 2, 3, 0.4, 0.5, 0.6), model->RawPose());
 
-  model = world->ModelByIndex(12);
+  model = world->ModelByIndex(11);
   ASSERT_NE(nullptr, model);
   ASSERT_EQ("model_with_messy_delimiters_quaternion", model->Name());
   EXPECT_EQ(Pose(1, 2, 3, 0.7071068, 0.7071068, 0, 0), model->RawPose());

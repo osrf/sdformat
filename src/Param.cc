@@ -69,7 +69,7 @@ Param::Param(const std::string &_key, const std::string &_typeName,
   this->dataPtr->description = _description;
   this->dataPtr->set = false;
 
-  SDF_ASSERT(this->ValueFromString(_default), "Invalid parameter");
+  SDF_ASSERT(this->ValueFromString(_default, {}), "Invalid parameter");
   this->dataPtr->defaultValue = this->dataPtr->value;
 }
 
@@ -84,7 +84,7 @@ Param::Param(const std::string &_key, const std::string &_typeName,
   if (!_minValue.empty())
   {
     SDF_ASSERT(
-        this->ValueFromString(_minValue),
+        this->ValueFromString(_minValue, {}),
         std::string("Invalid [min] parameter in SDFormat description of [") +
             _key + "]");
     this->dataPtr->minValue = this->dataPtr->value;
@@ -93,7 +93,7 @@ Param::Param(const std::string &_key, const std::string &_typeName,
   if (!_maxValue.empty())
   {
     SDF_ASSERT(
-        this->ValueFromString(_maxValue),
+        this->ValueFromString(_maxValue, {}),
         std::string("Invalid [max] parameter in SDFormat description of [") +
             _key + "]");
     this->dataPtr->maxValue = this->dataPtr->value;
@@ -433,10 +433,12 @@ bool ParseColorUsingStringStream(const std::string &_input,
 /// (expects 6 ir 7 values) and the resulting pose is valid.
 /// \param[in] _input Input string.
 /// \param[in] _key Key of the parameter, used for error message.
+/// \param[in] _attributes Attributes associated to this pose.
 /// \param[out] _value This will be set with the parsed value.
 /// \return True if parsing pose succeeded.
 bool ParsePoseUsingStringStream(const std::string &_input,
-    const std::string &_key, ParamPrivate::ParamVariant &_value)
+    const std::string &_key, const Param_V &_attributes,
+    ParamPrivate::ParamVariant &_value)
 {
   StringStreamClassicLocale ss(_input);
   std::string token;
@@ -486,19 +488,32 @@ bool ParsePoseUsingStringStream(const std::string &_input,
   if (!isValidPose)
     return ParseUsingStringStream<ignition::math::Pose3d>(_input, _key, _value);
 
-  if (values.size() == 6u)
+  std::string rotationType = "rpy_radians";
+  for (const auto &p : _attributes)
+  {
+    if (p->GetKey() == "rotation_type")
+      rotationType = p->GetAsString();
+  }
+
+  if (values.size() == 6u && rotationType == "rpy_radians")
   {
     _value = ignition::math::Pose3d(values[0], values[1], values[2],
         values[3], values[4], values[5]);
   }
-  else if (values.size() == 7u)
+  else if (values.size() == 6u && rotationType == "rpy_degrees")
+  {
+    _value = ignition::math::Pose3d(values[0], values[1], values[2],
+        IGN_DTOR(values[3]), IGN_DTOR(values[4]), IGN_DTOR(values[5]));
+  }
+  else if (values.size() == 7u && rotationType == "q_wxyz")
   {
     _value = ignition::math::Pose3d(values[0], values[1], values[2],
         values[3], values[4], values[5], values[6]);
   }
   else
   {
-    sdferr << "Pose values must have either 6 or 7 values.\n";
+    sdferr << "Pose values must have either 6 (rpy_radians, rpy_degrees) or "
+        << "7 values (q_wxyz).\n";
     return false;
   }
 
@@ -506,7 +521,8 @@ bool ParsePoseUsingStringStream(const std::string &_input,
 }
 
 //////////////////////////////////////////////////
-bool Param::ValueFromString(const std::string &_value)
+bool Param::ValueFromString(const std::string &_value,
+                            const Param_V &_attributes)
 {
   // Under some circumstances, latin locales (es_ES or pt_BR) will return a
   // comma for decimal position instead of a dot, making the conversion
@@ -622,7 +638,7 @@ bool Param::ValueFromString(const std::string &_value)
       if (!tmp.empty())
       {
         return ParsePoseUsingStringStream(
-            tmp, this->dataPtr->key, this->dataPtr->value);
+            tmp, this->dataPtr->key, _attributes, this->dataPtr->value);
       }
     }
     else if (this->dataPtr->typeName == "ignition::math::Quaterniond" ||
@@ -675,7 +691,44 @@ bool Param::SetFromString(const std::string &_value)
   }
 
   auto oldValue = this->dataPtr->value;
-  if (!this->ValueFromString(str))
+  if (!this->ValueFromString(str, {}))
+  {
+    return false;
+  }
+
+  // Check if the value is permitted
+  if (!this->ValidateValue())
+  {
+    this->dataPtr->value = oldValue;
+    return false;
+  }
+
+  this->dataPtr->set = true;
+  return this->dataPtr->set;
+}
+
+//////////////////////////////////////////////////
+bool Param::SetFromString(const std::string &_value, const Param_V &_attributes)
+{
+  if (_attributes.empty())
+    return this->SetFromString(_value);
+
+  std::string str = sdf::trim(_value.c_str());
+
+  if (str.empty() && this->dataPtr->required)
+  {
+    sdferr << "Empty string used when setting a required parameter. Key["
+           << this->GetKey() << "]\n";
+    return false;
+  }
+  else if (str.empty())
+  {
+    this->dataPtr->value = this->dataPtr->defaultValue;
+    return true;
+  }
+
+  auto oldValue = this->dataPtr->value;
+  if (!this->ValueFromString(str, _attributes))
   {
     return false;
   }

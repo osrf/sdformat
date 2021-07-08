@@ -208,6 +208,10 @@ namespace sdf
     /// \return The number of attributes.
     public: size_t GetAttributeCount() const;
 
+    /// \brief Get all the attribute params.
+    /// \return The vector of parameter attributes.
+    public: Param_V GetAttributes() const;
+
     /// \brief Get an attribute using an index.
     /// \param[in] _index the index of the attribute to get.
     /// \return A Param pointer to the attribute.

@@ -981,33 +981,6 @@ bool readXml(tinyxml2::XMLElement *_xml, ElementPtr _sdf,
     }
   }
 
-  if (_xml->GetText() != nullptr && _sdf->GetValue())
-  {
-    if (!_sdf->GetValue()->SetFromString(_xml->GetText()))
-      return false;
-  }
-
-  // check for nested sdf
-  std::string refSDFStr = _sdf->ReferenceSDF();
-  if (!refSDFStr.empty())
-  {
-    const std::string filePath = _sdf->FilePath();
-    const std::string xmlPath = _sdf->XmlPath();
-    auto lineNumber = _sdf->LineNumber();
-
-    ElementPtr refSDF;
-    refSDF.reset(new Element);
-    std::string refFilename = refSDFStr + ".sdf";
-    initFile(refFilename, refSDF);
-    _sdf->RemoveFromParent();
-    _sdf->Copy(refSDF);
-
-    _sdf->SetFilePath(filePath);
-    _sdf->SetXmlPath(xmlPath);
-    if (lineNumber.has_value())
-      _sdf->SetLineNumber(lineNumber.value());
-  }
-
   // A list of parent element-attributes pairs where a frame name is referenced
   // in the attribute. This is used to check if the reference is invalid.
   std::set<std::pair<std::string, std::string>> frameReferenceAttributes {
@@ -1116,6 +1089,34 @@ bool readXml(tinyxml2::XMLElement *_xml, ElementPtr _sdf,
       _errors.push_back(err);
       return false;
     }
+  }
+
+  if (_xml->GetText() != nullptr && _sdf->GetValue())
+  {
+    if (!_sdf->GetValue()->SetFromString(_xml->GetText(),
+        _sdf->GetAttributes()))
+      return false;
+  }
+
+  // check for nested sdf
+  std::string refSDFStr = _sdf->ReferenceSDF();
+  if (!refSDFStr.empty())
+  {
+    const std::string filePath = _sdf->FilePath();
+    const std::string xmlPath = _sdf->XmlPath();
+    auto lineNumber = _sdf->LineNumber();
+
+    ElementPtr refSDF;
+    refSDF.reset(new Element);
+    std::string refFilename = refSDFStr + ".sdf";
+    initFile(refFilename, refSDF);
+    _sdf->RemoveFromParent();
+    _sdf->Copy(refSDF);
+
+    _sdf->SetFilePath(filePath);
+    _sdf->SetXmlPath(xmlPath);
+    if (lineNumber.has_value())
+      _sdf->SetLineNumber(lineNumber.value());
   }
 
   if (_sdf->GetCopyChildren())

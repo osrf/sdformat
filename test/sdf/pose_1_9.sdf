@@ -32,11 +32,6 @@
       <link name="link"/>
     </model>
 
-    <model name="model_with_quaternion_no_attribute">
-      <pose>1 2 3   0.7071068 0.7071068 0 0</pose>
-      <link name="link"/>
-    </model>
-
     <model name="model_with_quaternion">
       <pose rotation_type="q_wxyz">1 2 3   0.7071068 0.7071068 0 0</pose>
       <link name="link"/>

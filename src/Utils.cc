@@ -60,36 +60,13 @@ bool loadPose(sdf::ElementPtr _sdf, ignition::math::Pose3d &_pose,
   std::pair<std::string, bool> framePair =
       sdf->Get<std::string>("relative_to", "");
 
-  // Read the rotation type attribute.
-  std::pair<std::string, bool> rotationTypePair =
-      sdf->Get<std::string>("rotation_type", "rpy_radians");
-
   // Read the pose value.
   std::pair<ignition::math::Pose3d, bool> posePair =
-    sdf->Get<ignition::math::Pose3d>("", ignition::math::Pose3d::Zero);
-
-  // Set output, but only if the return value is true.
+      sdf->Get<ignition::math::Pose3d>("", ignition::math::Pose3d::Zero);
   if (posePair.second)
   {
+    _pose = posePair.first;
     _frame = framePair.first;
-
-    // Modify the rotation component based on the rotation type expected.
-    // Only rpy_degrees require a conversion from degrees to radians.
-    if (rotationTypePair.second && rotationTypePair.first == "rpy_degrees")
-    {
-      ignition::math::Vector3d rpyRadians(
-          IGN_DTOR(posePair.first.Roll()),
-          IGN_DTOR(posePair.first.Pitch()),
-          IGN_DTOR(posePair.first.Yaw()));
-      _pose.Set(posePair.first.Pos(), rpyRadians);
-
-      // rpy_radians is the default type, while q_wxyz is determined
-      // automatically when there are 4 rotation elements.
-    }
-    else
-    {
-      _pose = posePair.first;
-    }
   }
 
   // The frame attribute is optional, so only return true or false based
