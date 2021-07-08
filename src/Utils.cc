@@ -62,7 +62,9 @@ bool loadPose(sdf::ElementPtr _sdf, ignition::math::Pose3d &_pose,
 
   // Read the pose value.
   std::pair<ignition::math::Pose3d, bool> posePair =
-      sdf->Get<ignition::math::Pose3d>("", ignition::math::Pose3d::Zero);
+    sdf->Get<ignition::math::Pose3d>("", ignition::math::Pose3d::Zero);
+
+  // Set output, but only if the return value is true.
   if (posePair.second)
   {
     _pose = posePair.first;
