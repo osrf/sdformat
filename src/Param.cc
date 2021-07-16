@@ -29,6 +29,7 @@
 #include "sdf/Assert.hh"
 #include "sdf/Param.hh"
 #include "sdf/Types.hh"
+#include "sdf/Element.hh"
 
 using namespace sdf;
 
@@ -69,7 +70,7 @@ Param::Param(const std::string &_key, const std::string &_typeName,
   this->dataPtr->description = _description;
   this->dataPtr->set = false;
 
-  SDF_ASSERT(this->ValueFromString(_default, {}), "Invalid parameter");
+  SDF_ASSERT(this->ValueFromString(_default, false), "Invalid parameter");
   this->dataPtr->defaultValue = this->dataPtr->value;
 }
 
@@ -84,7 +85,7 @@ Param::Param(const std::string &_key, const std::string &_typeName,
   if (!_minValue.empty())
   {
     SDF_ASSERT(
-        this->ValueFromString(_minValue, {}),
+        this->ValueFromString(_minValue, false),
         std::string("Invalid [min] parameter in SDFormat description of [") +
             _key + "]");
     this->dataPtr->minValue = this->dataPtr->value;
@@ -93,7 +94,7 @@ Param::Param(const std::string &_key, const std::string &_typeName,
   if (!_maxValue.empty())
   {
     SDF_ASSERT(
-        this->ValueFromString(_maxValue, {}),
+        this->ValueFromString(_maxValue, false),
         std::string("Invalid [max] parameter in SDFormat description of [") +
             _key + "]");
     this->dataPtr->maxValue = this->dataPtr->value;
@@ -102,6 +103,7 @@ Param::Param(const std::string &_key, const std::string &_typeName,
   this->dataPtr->value = valCopy;
 }
 
+//////////////////////////////////////////////////
 Param::Param(const Param &_param)
     : dataPtr(std::make_unique<ParamPrivate>(*_param.dataPtr))
 {
@@ -433,11 +435,12 @@ bool ParseColorUsingStringStream(const std::string &_input,
 /// (expects 6 ir 7 values) and the resulting pose is valid.
 /// \param[in] _input Input string.
 /// \param[in] _key Key of the parameter, used for error message.
-/// \param[in] _attributes Attributes associated to this pose.
+/// \param[in] _attributes Attributes associated to this pose, nullptr if there
+/// are none.
 /// \param[out] _value This will be set with the parsed value.
 /// \return True if parsing pose succeeded.
 bool ParsePoseUsingStringStream(const std::string &_input,
-    const std::string &_key, const Param_V &_attributes,
+    const std::string &_key, const Param_V *_attributes,
     ParamPrivate::ParamVariant &_value)
 {
   StringStreamClassicLocale ss(_input);
@@ -485,11 +488,11 @@ bool ParsePoseUsingStringStream(const std::string &_input,
     values.push_back(v);
   }
 
-  if (!isValidPose)
+  if (!isValidPose || !_attributes)
     return ParseUsingStringStream<ignition::math::Pose3d>(_input, _key, _value);
 
   std::string rotationType = "rpy_radians";
-  for (const auto &p : _attributes)
+  for (const auto& p : *_attributes)
   {
     if (p->GetKey() == "rotation_type")
       rotationType = p->GetAsString();
@@ -512,8 +515,9 @@ bool ParsePoseUsingStringStream(const std::string &_input,
   }
   else
   {
-    sdferr << "Pose values must have either 6 (rpy_radians, rpy_degrees) or "
-        << "7 values (q_wxyz).\n";
+    sdferr << "Found @rotation_type of [" << rotationType << "] and "
+        << values.size() << " values. Pose values must have either 6 "
+        << "(rpy_radians, rpy_degrees) or 7 values (q_wxyz).\n";
     return false;
   }
 
@@ -522,7 +526,7 @@ bool ParsePoseUsingStringStream(const std::string &_input,
 
 //////////////////////////////////////////////////
 bool Param::ValueFromString(const std::string &_value,
-                            const Param_V &_attributes)
+                            bool _ignoreAttributes)
 {
   // Under some circumstances, latin locales (es_ES or pt_BR) will return a
   // comma for decimal position instead of a dot, making the conversion
@@ -637,8 +641,15 @@ bool Param::ValueFromString(const std::string &_value,
     {
       if (!tmp.empty())
       {
+        const ElementPtr p = this->dataPtr->parentElement.lock();
+        if (!_ignoreAttributes && p)
+        {
+          const Param_V attributes = p->GetAttributes();
+          return ParsePoseUsingStringStream(
+              tmp, this->dataPtr->key, &attributes, this->dataPtr->value);
+        }
         return ParsePoseUsingStringStream(
-            tmp, this->dataPtr->key, _attributes, this->dataPtr->value);
+            tmp, this->dataPtr->key, nullptr, this->dataPtr->value);
       }
     }
     else if (this->dataPtr->typeName == "ignition::math::Quaterniond" ||
@@ -674,8 +685,9 @@ bool Param::ValueFromString(const std::string &_value,
 }
 
 //////////////////////////////////////////////////
-bool Param::SetFromString(const std::string &_value)
+bool Param::SetFromString(const std::string &_value, bool _ignoreAttributes)
 {
+  this->dataPtr->strValue = _value;
   std::string str = sdf::trim(_value.c_str());
 
   if (str.empty() && this->dataPtr->required)
@@ -691,7 +703,7 @@ bool Param::SetFromString(const std::string &_value)
   }
 
   auto oldValue = this->dataPtr->value;
-  if (!this->ValueFromString(str, {}))
+  if (!this->ValueFromString(str, _ignoreAttributes))
   {
     return false;
   }
@@ -708,46 +720,42 @@ bool Param::SetFromString(const std::string &_value)
 }
 
 //////////////////////////////////////////////////
-bool Param::SetFromString(const std::string &_value, const Param_V &_attributes)
+bool Param::SetFromString(const std::string &_value)
 {
-  if (_attributes.empty())
-    return this->SetFromString(_value);
+  return this->SetFromString(_value, false);
+}
 
-  std::string str = sdf::trim(_value.c_str());
+//////////////////////////////////////////////////
+ElementPtr Param::GetParentElement() const
+{
+  return this->dataPtr->parentElement.lock();
+}
 
-  if (str.empty() && this->dataPtr->required)
+//////////////////////////////////////////////////
+void Param::SetParentElement(const ElementPtr _parentElement)
+{
+  if (!_parentElement)
+    this->dataPtr->parentElement.reset();
+
+  this->dataPtr->parentElement = _parentElement;
+
+  if (this->dataPtr->strValue.has_value())
   {
-    sdferr << "Empty string used when setting a required parameter. Key["
-           << this->GetKey() << "]\n";
-    return false;
+    const std::string strVal = this->dataPtr->strValue.value();
+    if (!this->SetFromString(strVal))
+    {
+      sdferr << "Failed to set value [" << strVal
+          << "] for new parent element of " << "name ["
+          << _parentElement->GetName() << "], reverting to previous value.\n";
+    }
   }
-  else if (str.empty())
-  {
-    this->dataPtr->value = this->dataPtr->defaultValue;
-    return true;
-  }
-
-  auto oldValue = this->dataPtr->value;
-  if (!this->ValueFromString(str, _attributes))
-  {
-    return false;
-  }
-
-  // Check if the value is permitted
-  if (!this->ValidateValue())
-  {
-    this->dataPtr->value = oldValue;
-    return false;
-  }
-
-  this->dataPtr->set = true;
-  return this->dataPtr->set;
 }
 
 //////////////////////////////////////////////////
 void Param::Reset()
 {
   this->dataPtr->value = this->dataPtr->defaultValue;
+  this->dataPtr->strValue = std::nullopt;
   this->dataPtr->set = false;
 }
 

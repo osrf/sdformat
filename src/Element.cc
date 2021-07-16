@@ -132,6 +132,7 @@ void Element::AddValue(const std::string &_type,
   this->dataPtr->value =
       std::make_shared<Param>(this->dataPtr->name, _type, _defaultValue,
                               _required, _minValue, _maxValue, _description);
+  this->dataPtr->value->SetParentElement(shared_from_this());
 }
 
 /////////////////////////////////////////////////
@@ -141,8 +142,10 @@ ParamPtr Element::CreateParam(const std::string &_key,
                               bool _required,
                               const std::string &_description)
 {
-  return ParamPtr(
-      new Param(_key, _type, _defaultValue, _required, _description));
+  ParamPtr param(new Param(
+      _key, _type, _defaultValue, _required, _description));
+  param->SetParentElement(shared_from_this());
+  return param;
 }
 
 /////////////////////////////////////////////////
@@ -175,7 +178,9 @@ ElementPtr Element::Clone() const
   for (aiter = this->dataPtr->attributes.begin();
        aiter != this->dataPtr->attributes.end(); ++aiter)
   {
-    clone->dataPtr->attributes.push_back((*aiter)->Clone());
+    auto clonedAttribute = (*aiter)->Clone();
+    clonedAttribute->SetParentElement(clone);
+    clone->dataPtr->attributes.push_back(clonedAttribute);
   }
 
   ElementPtr_V::const_iterator eiter;
@@ -195,6 +200,7 @@ ElementPtr Element::Clone() const
   if (this->dataPtr->value)
   {
     clone->dataPtr->value = this->dataPtr->value->Clone();
+    clone->dataPtr->value->SetParentElement(clone);
   }
 
   if (this->dataPtr->includeElement)
@@ -222,24 +228,19 @@ void Element::Copy(const ElementPtr _elem)
   for (Param_V::iterator iter = _elem->dataPtr->attributes.begin();
        iter != _elem->dataPtr->attributes.end(); ++iter)
   {
-    if (!this->HasAttribute((*iter)->GetKey()))
+    if (this->HasAttribute((*iter)->GetKey()))
     {
-      this->dataPtr->attributes.push_back((*iter)->Clone());
+      this->RemoveAttribute((*iter)->GetKey());
     }
-    ParamPtr param = this->GetAttribute((*iter)->GetKey());
-    (*param) = (**iter);
+    auto clonedAttribute = (*iter)->Clone();
+    clonedAttribute->SetParentElement(shared_from_this());
+    this->dataPtr->attributes.push_back(clonedAttribute);
   }
 
   if (_elem->GetValue())
   {
-    if (!this->dataPtr->value)
-    {
-      this->dataPtr->value = _elem->GetValue()->Clone();
-    }
-    else
-    {
-      *(this->dataPtr->value) = *(_elem->GetValue());
-    }
+    this->dataPtr->value = _elem->GetValue()->Clone();
+    this->dataPtr->value->SetParentElement(shared_from_this());
   }
 
   this->dataPtr->elementDescriptions.clear();

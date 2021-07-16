@@ -30,7 +30,7 @@
 #include "test_config.h"
 
 //////////////////////////////////////////////////
-TEST(Pose1_9, ModelPoses)
+TEST(Pose1_9, ModelPose)
 {
   using Pose = ignition::math::Pose3d;
 
@@ -42,7 +42,6 @@ TEST(Pose1_9, ModelPoses)
   auto errors = root.Load(testFile);
   for (const auto e : errors)
     std::cout << e << std::endl;
-  // std::cout << errors << std::endl;
   ASSERT_TRUE(errors.empty());
   EXPECT_EQ(SDF_PROTOCOL_VERSION, root.Version());
 
@@ -109,4 +108,313 @@ TEST(Pose1_9, ModelPoses)
   ASSERT_NE(nullptr, model);
   ASSERT_EQ("model_with_messy_delimiters_quaternion", model->Name());
   EXPECT_EQ(Pose(1, 2, 3, 0.7071068, 0.7071068, 0, 0), model->RawPose());
+}
+
+//////////////////////////////////////////////////
+TEST(Pose1_9, SetQuatIntoDefaultFail)
+{
+  using Pose = ignition::math::Pose3d;
+
+  sdf::ElementPtr poseElem(new sdf::Element);
+  poseElem->SetName("pose");
+  poseElem->AddValue("pose", "0 0 0   0 0 0", true);
+  poseElem->AddAttribute("relative_to", "string", "", false);
+  poseElem->AddAttribute("rotation_type", "string", "rpy_radians", false);
+
+  sdf::ParamPtr poseValueParam = poseElem->GetValue();
+  ASSERT_NE(nullptr, poseValueParam);
+  EXPECT_FALSE(poseValueParam->SetFromString(
+      "1 2 3   0.7071068 0.7071068 0 0"));
+}
+
+//////////////////////////////////////////////////
+TEST(Pose1_9, SetIntoRpyRadiansFail)
+{
+  using Pose = ignition::math::Pose3d;
+
+  sdf::ElementPtr poseElem(new sdf::Element);
+  poseElem->SetName("pose");
+  poseElem->AddValue("pose", "0 0 0   0 0 0", true);
+  poseElem->AddAttribute("relative_to", "string", "", false);
+  poseElem->AddAttribute("rotation_type", "string", "rpy_radians", false);
+
+  sdf::ParamPtr rpyRadiansAttrib = poseElem->GetAttribute("rotation_type");
+  ASSERT_NE(nullptr, rpyRadiansAttrib);
+  ASSERT_TRUE(rpyRadiansAttrib->Set<std::string>("rpy_radians"));
+
+  sdf::ParamPtr poseValueParam = poseElem->GetValue();
+  ASSERT_NE(nullptr, poseValueParam);
+  EXPECT_FALSE(poseValueParam->SetFromString(
+      "1 2 3   0.7071068 0.7071068 0 0"));
+}
+
+//////////////////////////////////////////////////
+TEST(Pose1_9, SetIntoRpyDegreesFail)
+{
+  using Pose = ignition::math::Pose3d;
+
+  sdf::ElementPtr poseElem(new sdf::Element);
+  poseElem->SetName("pose");
+  poseElem->AddValue("pose", "0 0 0   0 0 0", true);
+  poseElem->AddAttribute("relative_to", "string", "", false);
+  poseElem->AddAttribute("rotation_type", "string", "rpy_radians", false);
+
+  sdf::ParamPtr rpyDegreesAttrib = poseElem->GetAttribute("rotation_type");
+  ASSERT_NE(nullptr, rpyDegreesAttrib);
+  ASSERT_TRUE(rpyDegreesAttrib->Set<std::string>("rpy_degrees"));
+
+  sdf::ParamPtr poseValueParam = poseElem->GetValue();
+  ASSERT_NE(nullptr, poseValueParam);
+  EXPECT_FALSE(poseValueParam->SetFromString(
+      "1 2 3   0.7071068 0.7071068 0 0"));
+}
+
+//////////////////////////////////////////////////
+TEST(Pose1_9, SetIntoQuatFail)
+{
+  using Pose = ignition::math::Pose3d;
+
+  sdf::ElementPtr poseElem(new sdf::Element);
+  poseElem->SetName("pose");
+  poseElem->AddValue("pose", "0 0 0   0 0 0", true);
+  poseElem->AddAttribute("relative_to", "string", "", false);
+  poseElem->AddAttribute("rotation_type", "string", "rpy_radians", false);
+
+  sdf::ParamPtr quatAttrib = poseElem->GetAttribute("rotation_type");
+  ASSERT_NE(nullptr, quatAttrib);
+  ASSERT_TRUE(quatAttrib->Set<std::string>("q_wxyz"));
+
+  sdf::ParamPtr poseValueParam = poseElem->GetValue();
+  ASSERT_NE(nullptr, poseValueParam);
+  EXPECT_FALSE(poseValueParam->SetFromString(
+      "1 2 3   0.4 0.5 0.6"));
+}
+
+//////////////////////////////////////////////////
+TEST(Pose1_9, PoseElementSetAndGet)
+{
+  using Pose = ignition::math::Pose3d;
+
+  sdf::ElementPtr poseElem(new sdf::Element);
+  poseElem->SetName("pose");
+  poseElem->AddValue("pose", "0 0 0   0 0 0", true);
+  poseElem->AddAttribute("relative_to", "string", "", false);
+  poseElem->AddAttribute("rotation_type", "string", "rpy_radians", false);
+  poseElem->Set<ignition::math::Pose3d>(Pose(1, 2, 3, 0.4, 0.5, 0.6));
+
+  Pose elemVal;
+  ASSERT_TRUE(poseElem->Get<ignition::math::Pose3d>("", elemVal, Pose()));
+  EXPECT_EQ(Pose(1, 2, 3, 0.4, 0.5, 0.6), elemVal);
+}
+
+//////////////////////////////////////////////////
+TEST(Pose1_9, PoseElementSetAndParamGet)
+{
+  using Pose = ignition::math::Pose3d;
+
+  sdf::ElementPtr poseElem(new sdf::Element);
+  poseElem->SetName("pose");
+  poseElem->AddValue("pose", "0 0 0   0 0 0", true);
+  poseElem->AddAttribute("relative_to", "string", "", false);
+  poseElem->AddAttribute("rotation_type", "string", "rpy_radians", false);
+  poseElem->Set<ignition::math::Pose3d>(Pose(1, 2, 3, 0.4, 0.5, 0.6));
+
+  sdf::ParamPtr poseValueParam = poseElem->GetValue();
+  ASSERT_NE(nullptr, poseValueParam);
+
+  Pose paramVal;
+  ASSERT_TRUE(poseValueParam->Get<ignition::math::Pose3d>(paramVal));
+  EXPECT_EQ(Pose(1, 2, 3, 0.4, 0.5, 0.6), paramVal);
+}
+
+//////////////////////////////////////////////////
+TEST(Pose1_9, PoseParamSetAndGet)
+{
+  using Pose = ignition::math::Pose3d;
+
+  sdf::ElementPtr poseElem(new sdf::Element);
+  poseElem->SetName("pose");
+  poseElem->AddValue("pose", "0 0 0   0 0 0", true);
+  poseElem->AddAttribute("relative_to", "string", "", false);
+  poseElem->AddAttribute("rotation_type", "string", "rpy_radians", false);
+
+  sdf::ParamPtr poseValueParam = poseElem->GetValue();
+  ASSERT_NE(nullptr, poseValueParam);
+
+  ASSERT_TRUE(poseValueParam->Set<ignition::math::Pose3d>(
+        Pose(1, 2, 3, 0.4, 0.5, 0.6)));
+
+  Pose paramVal;
+  ASSERT_TRUE(poseValueParam->Get<ignition::math::Pose3d>(paramVal));
+  EXPECT_EQ(Pose(1, 2, 3, 0.4, 0.5, 0.6), paramVal);
+}
+
+//////////////////////////////////////////////////
+TEST(Pose1_9, PoseParamSetFromStringAndGet)
+{
+  using Pose = ignition::math::Pose3d;
+
+  sdf::ElementPtr poseElem(new sdf::Element);
+  poseElem->SetName("pose");
+  poseElem->AddValue("pose", "0 0 0   0 0 0", true);
+  poseElem->AddAttribute("relative_to", "string", "", false);
+  poseElem->AddAttribute("rotation_type", "string", "rpy_radians", false);
+
+  sdf::ParamPtr poseValueParam = poseElem->GetValue();
+  ASSERT_NE(nullptr, poseValueParam);
+
+  ASSERT_TRUE(poseValueParam->SetFromString("1 2 3   0.4 0.5 0.6"));
+
+  Pose paramVal;
+  ASSERT_TRUE(poseValueParam->Get<ignition::math::Pose3d>(paramVal));
+  EXPECT_EQ(Pose(1, 2, 3, 0.4, 0.5, 0.6), paramVal);
+}
+
+//////////////////////////////////////////////////
+TEST(Pose1_9, PoseParamSetAndElemGet)
+{
+  using Pose = ignition::math::Pose3d;
+
+  sdf::ElementPtr poseElem(new sdf::Element);
+  poseElem->SetName("pose");
+  poseElem->AddValue("pose", "0 0 0   0 0 0", true);
+  poseElem->AddAttribute("relative_to", "string", "", false);
+  poseElem->AddAttribute("rotation_type", "string", "rpy_radians", false);
+
+  sdf::ParamPtr poseValueParam = poseElem->GetValue();
+  ASSERT_NE(nullptr, poseValueParam);
+
+  ASSERT_TRUE(poseValueParam->Set<ignition::math::Pose3d>(
+        Pose(1, 2, 3, 0.4, 0.5, 0.6)));
+
+  Pose elemVal;
+  ASSERT_TRUE(poseElem->Get<ignition::math::Pose3d>("", elemVal, Pose()));
+  EXPECT_EQ(Pose(1, 2, 3, 0.4, 0.5, 0.6), elemVal);
+}
+
+//////////////////////////////////////////////////
+TEST(Pose1_9, PoseParamSetAndParentElemGet)
+{
+  using Pose = ignition::math::Pose3d;
+
+  sdf::ElementPtr poseElem(new sdf::Element);
+  poseElem->SetName("pose");
+  poseElem->AddValue("pose", "0 0 0   0 0 0", true);
+  poseElem->AddAttribute("relative_to", "string", "", false);
+  poseElem->AddAttribute("rotation_type", "string", "rpy_radians", false);
+
+  sdf::ParamPtr poseValueParam = poseElem->GetValue();
+  ASSERT_NE(nullptr, poseValueParam);
+
+  ASSERT_TRUE(poseValueParam->Set<ignition::math::Pose3d>(
+        Pose(1, 2, 3, 0.4, 0.5, 0.6)));
+
+  sdf::ElementPtr parentElem = poseValueParam->GetParentElement();
+  ASSERT_NE(nullptr, parentElem);
+  Pose parentElemVal;
+  ASSERT_TRUE(parentElem->Get<ignition::math::Pose3d>(
+      "", parentElemVal, Pose()));
+  EXPECT_EQ(Pose(1, 2, 3, 0.4, 0.5, 0.6), parentElemVal);
+}
+
+//////////////////////////////////////////////////
+TEST(Pose1_9, ChangingParentPoseElement)
+{
+  using Pose = ignition::math::Pose3d;
+
+  sdf::ElementPtr poseElem(new sdf::Element);
+  poseElem->SetName("pose");
+  poseElem->AddValue("pose", "0 0 0   0 0 0", true);
+  poseElem->AddAttribute("relative_to", "string", "", false);
+  poseElem->AddAttribute("rotation_type", "string", "rpy_radians", false);
+  ASSERT_TRUE(poseElem->Set<ignition::math::Pose3d>(
+      Pose(1, 2, 3, 0.4, 0.5, 0.6)));
+
+  sdf::ElementPtr rpyDegreesPoseElem(new sdf::Element);
+  rpyDegreesPoseElem->SetName("pose");
+  rpyDegreesPoseElem->AddValue("pose", "0 0 0   0 0 0", true);
+  rpyDegreesPoseElem->AddAttribute("relative_to", "string", "", false);
+  rpyDegreesPoseElem->AddAttribute(
+      "rotation_type", "string", "rpy_degrees", false);
+
+  sdf::ParamPtr rpyDegreesAttrib = poseElem->GetAttribute("rotation_type");
+  ASSERT_NE(nullptr, rpyDegreesAttrib);
+  ASSERT_TRUE(rpyDegreesAttrib->Set<std::string>("rpy_degrees"));
+
+  sdf::ElementPtr rpyRadiansPoseElem(new sdf::Element);
+  rpyRadiansPoseElem->SetName("pose");
+  rpyRadiansPoseElem->AddValue("pose", "0 0 0   0 0 0", true);
+  rpyRadiansPoseElem->AddAttribute("relative_to", "string", "", false);
+  rpyRadiansPoseElem->AddAttribute(
+      "rotation_type", "string", "rpy_radians", false);
+
+  sdf::ParamPtr rpyRadiansAttrib = poseElem->GetAttribute("rotation_type");
+  ASSERT_NE(nullptr, rpyRadiansAttrib);
+  ASSERT_TRUE(rpyRadiansAttrib->Set<std::string>("rpy_radians"));
+
+  // Param from original default attibute
+  sdf::ParamPtr valParam = poseElem->GetValue();
+  ASSERT_NE(nullptr, valParam);
+
+  Pose val;
+  ASSERT_TRUE(valParam->Get<ignition::math::Pose3d>(val));
+  EXPECT_EQ(Pose(1, 2, 3, 0.4, 0.5, 0.6), val);
+
+  // Set parent to Element with rotation_type attribute as rpy_degrees
+  valParam->SetParentElement(rpyDegreesPoseElem);
+  ASSERT_TRUE(valParam->Get<ignition::math::Pose3d>(val));
+  EXPECT_EQ(Pose(1, 2, 3, IGN_DTOR(0.4), IGN_DTOR(0.5), IGN_DTOR(0.6)), val);
+
+  // Set parent to Element with rotation_type attribute as rpy_radians
+  valParam->SetParentElement(rpyRadiansPoseElem);
+  ASSERT_TRUE(valParam->Get<ignition::math::Pose3d>(val));
+  EXPECT_EQ(Pose(1, 2, 3, 0.4, 0.5, 0.6), val);
+
+  // Remove parent
+  valParam->SetParentElement(nullptr);
+  EXPECT_EQ(Pose(1, 2, 3, 0.4, 0.5, 0.6), val);
+}
+
+//////////////////////////////////////////////////
+TEST(Pose1_9, ChangingParentPoseElementFromQuaternion)
+{
+  using Pose = ignition::math::Pose3d;
+
+  sdf::ElementPtr quatPoseElem(new sdf::Element);
+  quatPoseElem->SetName("pose");
+  quatPoseElem->AddValue("pose", "0 0 0   0 0 0", true);
+  quatPoseElem->AddAttribute("relative_to", "string", "", false);
+  quatPoseElem->AddAttribute(
+      "rotation_type", "string", "rpy_degrees", false);
+
+  sdf::ParamPtr quatAttrib = quatPoseElem->GetAttribute("rotation_type");
+  ASSERT_NE(nullptr, quatAttrib);
+  ASSERT_TRUE(quatAttrib->Set<std::string>("q_wxyz"));
+
+  sdf::ElementPtr rpyRadiansPoseElem(new sdf::Element);
+  rpyRadiansPoseElem->SetName("pose");
+  rpyRadiansPoseElem->AddValue("pose", "0 0 0   0 0 0", true);
+  rpyRadiansPoseElem->AddAttribute("relative_to", "string", "", false);
+  rpyRadiansPoseElem->AddAttribute(
+      "rotation_type", "string", "rpy_radians", false);
+
+  sdf::ParamPtr rpyRadiansAttrib =
+      rpyRadiansPoseElem->GetAttribute("rotation_type");
+  ASSERT_NE(nullptr, rpyRadiansAttrib);
+  ASSERT_TRUE(rpyRadiansAttrib->Set<std::string>("rpy_radians"));
+
+  // Param from original default attibute
+  sdf::ParamPtr valParam = quatPoseElem->GetValue();
+  ASSERT_NE(nullptr, valParam);
+  ASSERT_TRUE(valParam->SetFromString("1 2 3   0.7071068 0.7071068 0 0"));
+
+  // Changing to parent Element with rotation_type attribute rpy_radians
+  // The new value setting will fail since it can't parse 7 values into xyzrpy
+  // TODO(AA): To capture error string.
+  valParam->SetParentElement(rpyRadiansPoseElem);
+
+  Pose val;
+  ASSERT_TRUE(valParam->Get<ignition::math::Pose3d>(val));
+  EXPECT_NE(Pose(1, 2, 3, 0.7071068, 0.7071068, 0.0), val);
+  EXPECT_EQ(Pose(1, 2, 3, 0.7071068, 0.7071068, 0, 0), val);
 }

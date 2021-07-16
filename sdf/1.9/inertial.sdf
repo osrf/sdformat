@@ -6,9 +6,9 @@
     <description>The mass of the link.</description>
   </element>
 
-  <element name="pose" type="pose" default="0 0 0 0 0 0" required="0">
+  <include filename="pose.sdf" required="0">
     <description>This is the pose of the inertial reference frame. The origin of the inertial reference frame needs to be at the center of gravity. The axes of the inertial reference frame do not need to be aligned with the principal axes of the inertia.</description>
-  </element>
+  </include>
 
   <element name="inertia" required="0">
     <description>The 3x3 rotational inertia matrix. Because the rotational inertia matrix is symmetric, only 6 above-diagonal elements of this matrix are specified here, using the attributes ixx, ixy, ixz, iyy, iyz, izz.</description>

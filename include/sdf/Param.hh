@@ -53,6 +53,10 @@ namespace sdf
   inline namespace SDF_VERSION_NAMESPACE {
   //
 
+  class SDFORMAT_VISIBLE Element;
+  typedef std::shared_ptr<Element> ElementPtr;
+  typedef std::weak_ptr<Element> ElementWeakPtr;
+
   class SDFORMAT_VISIBLE Param;
 
   /// \def ParamPtr
@@ -182,13 +186,24 @@ namespace sdf
 
     /// \brief Set the parameter value from a string.
     /// \param[in] _value New value for the parameter in string form.
-    public: bool SetFromString(const std::string &_value);
+    /// \param[in] _ignoreAttributes Whether to ignore parent element attributes
+    /// when parsing value from string.
+    public: bool SetFromString(const std::string &_value,
+                               bool _ignoreAttributes);
 
     /// \brief Set the parameter value from a string.
     /// \param[in] _value New value for the parameter in string form.
-    /// \param[in] _attributes Attributes that are associated to this value.
-    public: bool SetFromString(const std::string &_value,
-                               const Param_V &_attributes);
+    public: bool SetFromString(const std::string &_value);
+
+    /// \brief Get the parent Element of this Param.
+    /// \return Pointer to this Param's parent Element, nullptr if there is no
+    /// parent Element.
+    public: ElementPtr GetParentElement() const;
+
+    /// \brief Set the parent Element of this Param.
+    /// \param[in] _parentElement Pointer to new parent Element. A nullptr can
+    /// provided to remove the current parent Element.
+    public: void SetParentElement(const ElementPtr _parentElement);
 
     /// \brief Reset the parameter to the default value.
     public: void Reset();
@@ -281,9 +296,10 @@ namespace sdf
 
     /// \brief Private method to set the Element from a passed-in string.
     /// \param[in] _value Value to set the parameter to.
-    /// \param[in] _attributes Attributes associated with this value.
+    /// \param[in] _ignoreAttributes Whether to ignore parent element attributes
+    /// when parsing value from string.
     private: bool ValueFromString(const std::string &_value,
-                                  const Param_V &_attributes);
+                                  bool _ignoreAttributes);
 
     /// \brief Private data
     private: std::unique_ptr<ParamPrivate> dataPtr;
@@ -308,6 +324,9 @@ namespace sdf
     /// \brief Description of the parameter.
     public: std::string description;
 
+    /// \brief Parent element.
+    public: ElementWeakPtr parentElement;
+
     /// \brief Update function pointer.
     public: std::function<std::any ()> updateFunc;
 
@@ -325,6 +344,9 @@ namespace sdf
 
     /// \brief This parameter's value
     public: ParamVariant value;
+
+    /// \brief This parameter's value that was provided as a string
+    public: std::optional<std::string> strValue;
 
     /// \brief This parameter's default value
     public: ParamVariant defaultValue;
@@ -351,7 +373,7 @@ namespace sdf
     {
       std::stringstream ss;
       ss << _value;
-      return this->SetFromString(ss.str());
+      return this->SetFromString(ss.str(), true);
     }
     catch(...)
     {

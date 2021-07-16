@@ -99,40 +99,42 @@ TEST(Element, ReferenceSDF)
 /////////////////////////////////////////////////
 TEST(Element, AddValue)
 {
-  sdf::Element elem;
+  sdf::ElementPtr elem = std::make_shared<sdf::Element>();
 
-  elem.SetName("test");
-  elem.AddValue("string", "foo", false, "foo description");
+  elem->SetName("test");
+  elem->AddValue("string", "foo", false, "foo description");
 
-  sdf::ParamPtr param = elem.GetValue();
+  sdf::ParamPtr param = elem->GetValue();
   ASSERT_TRUE(param->IsType<std::string>());
   ASSERT_EQ(param->GetKey(), "test");
   ASSERT_EQ(param->GetTypeName(), "string");
   ASSERT_EQ(param->GetDefaultAsString(), "foo");
   ASSERT_EQ(param->GetDescription(), "foo description");
+  ASSERT_NE(param->GetParentElement(), nullptr);
+  EXPECT_EQ(param->GetParentElement()->GetName(), "test");
 }
 
 /////////////////////////////////////////////////
 TEST(Element, AddAttribute)
 {
-  sdf::Element elem;
+  sdf::ElementPtr elem = std::make_shared<sdf::Element>();
 
-  ASSERT_EQ(elem.GetAttributeCount(), 0UL);
+  ASSERT_EQ(elem->GetAttributeCount(), 0UL);
 
-  elem.AddAttribute("test", "string", "foo", false, "foo description");
-  ASSERT_EQ(elem.GetAttributeCount(), 1UL);
+  elem->AddAttribute("test", "string", "foo", false, "foo description");
+  ASSERT_EQ(elem->GetAttributeCount(), 1UL);
 
-  elem.AddAttribute("attr", "float", "0.0", false, "float description");
-  ASSERT_EQ(elem.GetAttributeCount(), 2UL);
+  elem->AddAttribute("attr", "float", "0.0", false, "float description");
+  ASSERT_EQ(elem->GetAttributeCount(), 2UL);
 
-  sdf::ParamPtr param = elem.GetAttribute("test");
+  sdf::ParamPtr param = elem->GetAttribute("test");
   ASSERT_TRUE(param->IsType<std::string>());
   ASSERT_EQ(param->GetKey(), "test");
   ASSERT_EQ(param->GetTypeName(), "string");
   ASSERT_EQ(param->GetDefaultAsString(), "foo");
   ASSERT_EQ(param->GetDescription(), "foo description");
 
-  param = elem.GetAttribute("attr");
+  param = elem->GetAttribute("attr");
   ASSERT_TRUE(param->IsType<float>());
   ASSERT_EQ(param->GetKey(), "attr");
   ASSERT_EQ(param->GetTypeName(), "float");
@@ -143,48 +145,48 @@ TEST(Element, AddAttribute)
 /////////////////////////////////////////////////
 TEST(Element, GetAttributeSet)
 {
-  sdf::Element elem;
-  ASSERT_EQ(elem.GetAttributeCount(), 0UL);
-  elem.AddAttribute("test", "string", "foo", false, "foo description");
-  ASSERT_EQ(elem.GetAttributeCount(), 1UL);
+  sdf::ElementPtr elem = std::make_shared<sdf::Element>();
+  ASSERT_EQ(elem->GetAttributeCount(), 0UL);
+  elem->AddAttribute("test", "string", "foo", false, "foo description");
+  ASSERT_EQ(elem->GetAttributeCount(), 1UL);
 
-  EXPECT_FALSE(elem.GetAttributeSet("test"));
-  elem.GetAttribute("test")->Set("asdf");
-  EXPECT_TRUE(elem.GetAttributeSet("test"));
+  EXPECT_FALSE(elem->GetAttributeSet("test"));
+  elem->GetAttribute("test")->Set("asdf");
+  EXPECT_TRUE(elem->GetAttributeSet("test"));
 }
 
 /////////////////////////////////////////////////
 TEST(Element, RemoveAttribute)
 {
-  sdf::Element elem;
-  ASSERT_EQ(elem.GetAttributeCount(), 0UL);
+  sdf::ElementPtr elem = std::make_shared<sdf::Element>();
+  ASSERT_EQ(elem->GetAttributeCount(), 0UL);
 
-  elem.AddAttribute("test", "string", "foo", false, "foo description");
-  elem.AddAttribute("attr", "float", "0.0", false, "float description");
-  ASSERT_EQ(elem.GetAttributeCount(), 2UL);
+  elem->AddAttribute("test", "string", "foo", false, "foo description");
+  elem->AddAttribute("attr", "float", "0.0", false, "float description");
+  ASSERT_EQ(elem->GetAttributeCount(), 2UL);
 
-  elem.RemoveAttribute("test");
-  EXPECT_EQ(elem.GetAttributeCount(), 1UL);
-  EXPECT_EQ(elem.GetAttribute("test"), nullptr);
-  EXPECT_NE(elem.GetAttribute("attr"), nullptr);
+  elem->RemoveAttribute("test");
+  EXPECT_EQ(elem->GetAttributeCount(), 1UL);
+  EXPECT_EQ(elem->GetAttribute("test"), nullptr);
+  EXPECT_NE(elem->GetAttribute("attr"), nullptr);
 }
 
 /////////////////////////////////////////////////
 TEST(Element, RemoveAllAttributes)
 {
-  sdf::Element elem;
-  ASSERT_EQ(elem.GetAttributeCount(), 0UL);
+  sdf::ElementPtr elem = std::make_shared<sdf::Element>();
+  ASSERT_EQ(elem->GetAttributeCount(), 0UL);
 
-  elem.AddAttribute("test", "string", "foo", false, "foo description");
-  elem.AddAttribute("test2", "string", "foo", false, "foo description");
-  elem.AddAttribute("attr", "float", "0.0", false, "float description");
-  ASSERT_EQ(elem.GetAttributeCount(), 3UL);
+  elem->AddAttribute("test", "string", "foo", false, "foo description");
+  elem->AddAttribute("test2", "string", "foo", false, "foo description");
+  elem->AddAttribute("attr", "float", "0.0", false, "float description");
+  ASSERT_EQ(elem->GetAttributeCount(), 3UL);
 
-  elem.RemoveAllAttributes();
-  EXPECT_EQ(elem.GetAttributeCount(), 0UL);
-  EXPECT_EQ(elem.GetAttribute("test"), nullptr);
-  EXPECT_EQ(elem.GetAttribute("test2"), nullptr);
-  EXPECT_EQ(elem.GetAttribute("attr"), nullptr);
+  elem->RemoveAllAttributes();
+  EXPECT_EQ(elem->GetAttributeCount(), 0UL);
+  EXPECT_EQ(elem->GetAttribute("test"), nullptr);
+  EXPECT_EQ(elem->GetAttribute("test2"), nullptr);
+  EXPECT_EQ(elem->GetAttribute("attr"), nullptr);
 }
 
 /////////////////////////////////////////////////
@@ -313,6 +315,9 @@ TEST(Element, Clone)
   sdf::ElementPtr child = std::make_shared<sdf::Element>();
   sdf::ElementPtr desc = std::make_shared<sdf::Element>();
 
+  parent->SetName("parent");
+  child->SetName("child");
+
   parent->InsertElement(child);
   ASSERT_NE(parent->GetFirstElement(), nullptr);
 
@@ -345,6 +350,17 @@ TEST(Element, Clone)
   ASSERT_EQ(newelem->GetAttributeCount(), 1UL);
   ASSERT_NE(newelem->GetIncludeElement(), nullptr);
   EXPECT_EQ("include", newelem->GetIncludeElement()->GetName());
+
+  ASSERT_NE(nullptr, parent->GetValue()->GetParentElement());
+  EXPECT_EQ("parent", parent->GetValue()->GetParentElement()->GetName());
+
+  ASSERT_NE(nullptr, newelem->GetValue()->GetParentElement());
+  EXPECT_EQ("parent", newelem->GetValue()->GetParentElement()->GetName());
+  newelem->SetName("ClonedParent");
+  EXPECT_EQ("ClonedParent", newelem->GetValue()->GetParentElement()->GetName());
+
+  auto clonedAttribs = newelem->GetAttributes();
+  EXPECT_EQ("ClonedParent", clonedAttribs[0]->GetParentElement()->GetName());
 }
 
 /////////////////////////////////////////////////
@@ -547,16 +563,16 @@ TEST(Element, DocLeftPane)
 /////////////////////////////////////////////////
 TEST(Element, DocRightPane)
 {
-  sdf::Element elem;
+  sdf::ElementPtr elem = std::make_shared<sdf::Element>();
 
-  elem.SetDescription("Element description");
-  elem.AddAttribute("test", "string", "foo", false, "foo description");
-  elem.AddValue("string", "val", false, "val description");
-  elem.AddElementDescription(std::make_shared<sdf::Element>());
+  elem->SetDescription("Element description");
+  elem->AddAttribute("test", "string", "foo", false, "foo description");
+  elem->AddValue("string", "val", false, "val description");
+  elem->AddElementDescription(std::make_shared<sdf::Element>());
 
   std::string html;
   int index = 1;
-  elem.PrintDocRightPane(html, 0, index);
+  elem->PrintDocRightPane(html, 0, index);
   ASSERT_EQ(html,
             "<a name=\"1\">&lt&gt</a><div style='padding-left:0px;'>\n"
             "<div style='background-color: #ffffff'>\n"
@@ -605,11 +621,11 @@ TEST(Element, SetEmpty)
 /////////////////////////////////////////////////
 TEST(Element, Set)
 {
-  sdf::Element elem;
+  sdf::ElementPtr elem = std::make_shared<sdf::Element>();
 
-  elem.AddValue("string", "val", false, "val description");
+  elem->AddValue("string", "val", false, "val description");
 
-  ASSERT_TRUE(elem.Set<std::string>("hello"));
+  ASSERT_TRUE(elem->Set<std::string>("hello"));
 }
 
 /////////////////////////////////////////////////
@@ -639,12 +655,16 @@ TEST(Element, Copy)
   EXPECT_EQ("/sdf/world[@name=\"default\"]", dest->XmlPath());
   EXPECT_EQ("1.5", dest->OriginalVersion());
 
+  dest->SetName("Copied");
+
   sdf::ParamPtr param = dest->GetValue();
   ASSERT_TRUE(param->IsType<std::string>());
   ASSERT_EQ(param->GetKey(), "test");
   ASSERT_EQ(param->GetTypeName(), "string");
   ASSERT_EQ(param->GetDefaultAsString(), "val");
   ASSERT_EQ(param->GetDescription(), "val description");
+  ASSERT_NE(param->GetParentElement(), nullptr);
+  EXPECT_EQ(param->GetParentElement()->GetName(), "Copied");
 
   ASSERT_EQ(dest->GetAttributeCount(), 1UL);
   param = dest->GetAttribute("test");
@@ -653,6 +673,8 @@ TEST(Element, Copy)
   ASSERT_EQ(param->GetTypeName(), "string");
   ASSERT_EQ(param->GetDefaultAsString(), "foo");
   ASSERT_EQ(param->GetDescription(), "foo description");
+  ASSERT_NE(param->GetParentElement(), nullptr);
+  EXPECT_EQ(param->GetParentElement()->GetName(), "Copied");
 
   ASSERT_NE(dest->GetFirstElement(), nullptr);
   ASSERT_NE(dest->GetIncludeElement(), nullptr);
@@ -671,6 +693,7 @@ TEST(Element, CopyDestValue)
 
   dest->AddValue("string", "val", false, "val description");
   dest->Copy(src);
+  dest->SetName("Copied");
 
   sdf::ParamPtr param = dest->GetValue();
   ASSERT_TRUE(param->IsType<std::string>());
@@ -678,6 +701,8 @@ TEST(Element, CopyDestValue)
   ASSERT_EQ(param->GetTypeName(), "string");
   ASSERT_EQ(param->GetDefaultAsString(), "val");
   ASSERT_EQ(param->GetDescription(), "val description");
+  ASSERT_NE(param->GetParentElement(), nullptr);
+  EXPECT_EQ(param->GetParentElement()->GetName(), "Copied");
 
   ASSERT_EQ(dest->GetAttributeCount(), 1UL);
   param = dest->GetAttribute("test");
@@ -686,6 +711,8 @@ TEST(Element, CopyDestValue)
   ASSERT_EQ(param->GetTypeName(), "string");
   ASSERT_EQ(param->GetDefaultAsString(), "foo");
   ASSERT_EQ(param->GetDescription(), "foo description");
+  ASSERT_NE(param->GetParentElement(), nullptr);
+  EXPECT_EQ(param->GetParentElement()->GetName(), "Copied");
 
   ASSERT_NE(dest->GetFirstElement(), nullptr);
 }

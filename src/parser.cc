@@ -1114,8 +1114,7 @@ bool readXml(tinyxml2::XMLElement *_xml, ElementPtr _sdf,
 
   if (_xml->GetText() != nullptr && _sdf->GetValue())
   {
-    if (!_sdf->GetValue()->SetFromString(_xml->GetText(),
-        _sdf->GetAttributes()))
+    if (!_sdf->GetValue()->SetFromString(_xml->GetText()))
       return false;
   }
 
