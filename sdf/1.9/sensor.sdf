@@ -12,6 +12,7 @@
                   altimeter,
                   camera,
                   contact,
+                  boundingbox_camera, boundingbox,
                   depth_camera, depth,
                   force_torque,
                   gps,
@@ -26,6 +27,7 @@
                   rfid,
                   rfidtag,
                   rgbd_camera, rgbd,
+                  segmentation_camera, segmentation,
                   sonar,
                   thermal_camera, thermal,
                   wireless_receiver, and

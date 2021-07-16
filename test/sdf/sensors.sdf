@@ -308,7 +308,7 @@
         </lidar>
       </sensor>
 
- 
+
       <sensor name="rfid_sensor" type="rfid">
         <pose>4 5 6 0 0 0</pose>
       </sensor>
@@ -434,6 +434,121 @@
         </camera>
 
       </sensor>
+
+      <sensor name="segmentation_sensor" type="segmentation">
+        <pose>37 38 39 0 0 0</pose>
+        <camera name="my_segmentation_camera">
+          <pose>0.1 0.2 0.3 0 0 0</pose>
+          <horizontal_fov>.75</horizontal_fov>
+          <image>
+            <width>640</width>
+            <height>480</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.2</near>
+            <far>12.3</far>
+          </clip>
+
+          <save enabled="true">
+            <path>/tmp/cam</path>
+          </save>
+
+          <noise>
+            <type>gaussian</type>
+            <mean>0.5</mean>
+            <stddev>0.1</stddev>
+          </noise>
+
+          <distortion>
+            <k1>0.1</k1>
+            <k2>0.2</k2>
+            <k3>0.3</k3>
+            <p1>0.4</p1>
+            <p2>0.5</p2>
+            <center>0.2 0.4</center>
+          </distortion>
+          <lens>
+            <type>custom</type>
+            <scale_to_hfov>false</scale_to_hfov>
+            <custom_function>
+              <c1>1.1</c1>
+              <c2>2.2</c2>
+              <c3>3.3</c3>
+              <f>1.2</f>
+              <fun>sin</fun>
+            </custom_function>
+            <cutoff_angle>0.7505</cutoff_angle>
+            <env_texture_size>128</env_texture_size>
+            <intrinsics>
+              <fx>280</fx>
+              <fy>281</fy>
+              <cx>162</cx>
+              <cy>124</cy>
+              <s>1.2</s>
+            </intrinsics>
+          </lens>
+        </camera>
+
+      </sensor>
+
+      <sensor name="boundingbox_sensor" type="boundingbox">
+        <pose>37 38 39 0 0 0</pose>
+        <camera name="my_boundingbox_camera">
+          <pose>0.1 0.2 0.3 0 0 0</pose>
+          <horizontal_fov>.75</horizontal_fov>
+          <image>
+            <width>640</width>
+            <height>480</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.2</near>
+            <far>12.3</far>
+          </clip>
+
+          <save enabled="true">
+            <path>/tmp/cam</path>
+          </save>
+
+          <noise>
+            <type>gaussian</type>
+            <mean>0.5</mean>
+            <stddev>0.1</stddev>
+          </noise>
+
+          <distortion>
+            <k1>0.1</k1>
+            <k2>0.2</k2>
+            <k3>0.3</k3>
+            <p1>0.4</p1>
+            <p2>0.5</p2>
+            <center>0.2 0.4</center>
+          </distortion>
+          <lens>
+            <type>custom</type>
+            <scale_to_hfov>false</scale_to_hfov>
+            <custom_function>
+              <c1>1.1</c1>
+              <c2>2.2</c2>
+              <c3>3.3</c3>
+              <f>1.2</f>
+              <fun>sin</fun>
+            </custom_function>
+            <cutoff_angle>0.7505</cutoff_angle>
+            <env_texture_size>128</env_texture_size>
+            <intrinsics>
+              <fx>280</fx>
+              <fy>281</fy>
+              <cx>162</cx>
+              <cy>124</cy>
+              <s>1.2</s>
+            </intrinsics>
+          </lens>
+        </camera>
+
+      </sensor>
+
 
       <sensor name="wireless_receiver" type="wireless_receiver">
         <pose>13 14 15 0 0 0</pose>
