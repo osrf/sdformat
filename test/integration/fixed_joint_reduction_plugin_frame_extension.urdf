@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="chained_fixed_joint_links">
+  <gazebo>
+    <plugin name='test_plugin' filename='libtest_plugin.so'>
+      <serviceName>/test/plugin/service</serviceName>
+      <topicName>/test/plugin/topic</topicName>
+      <bodyName>link2</bodyName>
+      <updateRate>100</updateRate>
+      <xyzOffset>0 0 0</xyzOffset>
+      <rpyOffset>0 0 0</rpyOffset>
+    </plugin>
+  </gazebo>
+
+  <!-- Base Link -->
+  <link name="base_link">
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0.0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 1.0"/>
+      <geometry>
+        <box size="0.1 0.1 2"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 1" rpy="0 0 0"/>
+      <mass value="1"/>
+      <inertia
+        ixx="1.0" ixy="0.0" ixz="0.0"
+        iyy="1.0" iyz="0.0"
+        izz="1.0"/>
+    </inertial>
+  </link>
+
+  <!-- Link 1 -->
+  <link name="link1">
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0.0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0.0"/>
+      <geometry>
+        <box size="0.1 0.1 1"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 1" rpy="0 0 0"/>
+      <mass value="1"/>
+      <inertia
+        ixx="1.0" ixy="0.0" ixz="0.0"
+        iyy="1.0" iyz="0.0"
+        izz="1.0"/>
+    </inertial>
+  </link>
+
+  <!-- Link 2 -->
+  <link name="link2">
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0.0"/>
+      <geometry>
+        <box size="1.0 1.0 1"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0.0"/>
+      <geometry>
+        <box size="0.1 0.1 1"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 1" rpy="0 0 0"/>
+      <mass value="1"/>
+      <inertia
+        ixx="1.0" ixy="0.0" ixz="0.0"
+        iyy="1.0" iyz="0.0"
+        izz="1.0"/>
+    </inertial>
+  </link>
+
+  <!-- Joint 1 -->
+  <joint name="joint1" type="fixed">
+    <parent link="base_link"/>
+    <child link="link1"/>
+    <origin rpy="0 0 0.7854" xyz="0 1.0 0.0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+
+  <!-- Joint 2 -->
+  <joint name="joint2" type="fixed">
+    <parent link="link1"/>
+    <child link="link2"/>
+    <origin rpy="0 0 0.7854" xyz="0 1.0 0.0"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="0.7"/>
+  </joint>
+</robot>
+
