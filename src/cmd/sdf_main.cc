@@ -24,6 +24,7 @@
 #include <gz/utils/cli/GzFormatter.hpp>
 
 #include "sdf/config.hh"
+#include "sdf/ParserConfig.hh"
 #include "gz.hh"
 
 using namespace sdf;
@@ -78,6 +79,9 @@ struct SdfOptions
   /// \brief Printed rotations are snapped if they are less than this specified
   /// tolerance.
   double snapTolerance{0.01};
+
+  /// \\brief Policy used to handle parser warnings for check / print.
+  sdf::EnforcementPolicy warningsPolicy{sdf::EnforcementPolicy::WARN};
 };
 
 //////////////////////////////////////////////////
@@ -87,7 +91,7 @@ void runSdfCommand(const SdfOptions &_opt)
   switch(_opt.command)
   {
     case SdfCommand::kSdfCheck:
-      cmdCheck(_opt.filepath.c_str());
+      cmdCheck(_opt.filepath.c_str(), _opt.warningsPolicy);
       break;
     case SdfCommand::kSdfDescribe:
       cmdDescribe(_opt.version.c_str());
@@ -101,7 +105,7 @@ void runSdfCommand(const SdfOptions &_opt)
     case SdfCommand::kSdfPrint:
       cmdPrint(_opt.filepath.c_str(), _opt.degrees, _opt.snapToDegrees,
                _opt.snapTolerance, _opt.preserveIncludes, _opt.precision,
-               _opt.expandAutoInertials);
+               _opt.expandAutoInertials, _opt.warningsPolicy);
       break;
     case SdfCommand::kNone:
     default:
@@ -128,7 +132,7 @@ void addSdfFlags(CLI::App &_app)
     "Check if an SDFormat file is valid.")
     ->needs(filepathOpt);
 
-  command->add_option_function<std::string>("-d,--describe",
+  auto describeCmd = command->add_option_function<std::string>("-d,--describe",
     [opt](const std::string &_version){
       opt->command = SdfCommand::kSdfDescribe;
       opt->version = _version;
@@ -138,7 +142,7 @@ void addSdfFlags(CLI::App &_app)
     ->expected(0, 1)
     ->default_val(SDF_PROTOCOL_VERSION);
 
-  command->add_option_function<std::string>("-g,--graph",
+  auto graphCmd = command->add_option_function<std::string>("-g,--graph",
     [opt](const std::string &_graphType){
       opt->command = SdfCommand::kSdfGraph;
       opt->graphType = _graphType;
@@ -150,7 +154,7 @@ void addSdfFlags(CLI::App &_app)
     ->needs(filepathOpt)
     ->check(CLI::IsMember({"pose", "frame"}));
 
-  command->add_flag_callback("--inertial-stats",
+  auto inertialStatsCmd = command->add_flag_callback("--inertial-stats",
     [opt](){
       opt->command = SdfCommand::kSdfPrintInertialStats;
     },
@@ -165,6 +169,29 @@ void addSdfFlags(CLI::App &_app)
     "Print converted arg. Note the quaternion representation of the\n"
     "rotational part of poses and unit vectors will be normalized.")
     ->needs(filepathOpt);
+
+  auto warningsPolicyOpt = _app.add_option_function<std::string>(
+    "--warnings-policy",
+    [opt](const std::string &_policy)
+    {
+      if (_policy == "err")
+      {
+        opt->warningsPolicy = sdf::EnforcementPolicy::ERR;
+      }
+      else if (_policy == "log")
+      {
+        opt->warningsPolicy = sdf::EnforcementPolicy::LOG;
+      }
+      else
+      {
+        opt->warningsPolicy = sdf::EnforcementPolicy::WARN;
+      }
+    },
+    "Handle parser warnings as errors, warnings, or debug logs.")
+    ->check(CLI::IsMember({"err", "warn", "log"}));
+  warningsPolicyOpt->excludes(describeCmd);
+  warningsPolicyOpt->excludes(graphCmd);
+  warningsPolicyOpt->excludes(inertialStatsCmd);
 
   _app.add_flag("-i,--preserve-includes", opt->preserveIncludes,
       "Preserve included tags when printing converted arg (does "

@@ -46,12 +46,15 @@ namespace sdf
   inline namespace SDF_VERSION_NAMESPACE {
 
   //////////////////////////////////////////////////
-  int cmdCheck(const char *_path)
+  int cmdCheck(const char *_path, EnforcementPolicy _warningsPolicy)
   {
     int result = 0;
 
+    sdf::ParserConfig parserConfig;
+    parserConfig.SetWarningsPolicy(_warningsPolicy);
+
     sdf::Root root;
-    sdf::Errors errors = root.Load(_path);
+    sdf::Errors errors = root.Load(_path, parserConfig);
     if (!errors.empty())
     {
       for (auto &error : errors)
@@ -100,7 +103,13 @@ namespace sdf
       return -1;
     }
 
-    if (!sdf::readFile(_path, sdf))
+    sdf::Errors readErrors;
+    const bool parsed = sdf::readFile(_path, parserConfig, sdf, readErrors);
+    for (const auto &error : readErrors)
+    {
+      std::cerr << error << std::endl;
+    }
+    if (!parsed)
     {
       std::cerr << "Error: SDF parsing the xml failed.\n";
       return -1;
@@ -136,7 +145,7 @@ namespace sdf
   //////////////////////////////////////////////////
   int cmdPrint(const char *_path, bool _inDegrees, int _snapToDegrees,
       float _snapTolerance, bool _preserveIncludes, int _outPrecision,
-      bool _expandAutoInertials)
+      bool _expandAutoInertials, EnforcementPolicy _warningsPolicy)
   {
     if (!sdf::filesystem::exists(_path))
     {
@@ -145,6 +154,7 @@ namespace sdf
     }
 
     sdf::ParserConfig parserConfig;
+    parserConfig.SetWarningsPolicy(_warningsPolicy);
     if (_expandAutoInertials)
     {
       parserConfig.SetCalculateInertialConfiguration(

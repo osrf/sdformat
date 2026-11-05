@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<sdf version="1.11">
+  <model name="compound_model">
+    <link name="compound_link">
+      <inertial auto="true">
+        <pose>1 1 1 2 2 2</pose>
+        <inertia>
+          <ixx>1</ixx>
+          <iyy>1</iyy>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <collision name="box_collision">
+        <density>2.0</density>
+        <geometry>
+          <box><size>1 1 1</size></box>
+        </geometry>
+      </collision>
+    </link>
+  </model>
+</sdf>

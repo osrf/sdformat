@@ -20,6 +20,7 @@
 
 #include <cstring>
 
+#include "sdf/ParserConfig.hh"
 #include "sdf/system_util.hh"
 
 namespace sdf
@@ -30,8 +31,9 @@ namespace sdf
 
   /// \brief External hook to execute 'gz sdf -k' from the command line.
   /// \param[in] _path Path to the SDF file to validate.
+  /// \param[in] _warningsPolicy Policy used to handle parser warnings.
   /// \return Zero on success, negative one otherwise.
-  int cmdCheck(const char *_path);
+  int cmdCheck(const char *_path, EnforcementPolicy _warningsPolicy);
 
   /// \brief External hook to execute 'gz sdf -d' from the command line.
   /// \param[in] _version SDFormat version.
@@ -46,10 +48,11 @@ namespace sdf
   /// \param[in] _preserveIncludes Preserve included tags when printing.
   /// \param[in] _outPrecision Output stream precision for floating point.
   /// \param[in] _expandAutoInertials Print auto-computed inertial values.
+  /// \param[in] _warningsPolicy Policy used to handle parser warnings.
   /// \return int Zero on success, negative one otherwise.
   int cmdPrint(const char *_path, bool _inDegrees, int _snapToDegrees,
       float _snapTolerance, bool _preserveIncludes, int _outPrecision,
-      bool _expandAutoInertials);
+      bool _expandAutoInertials, EnforcementPolicy _warningsPolicy);
 
   /// \brief External hook to execute 'gz sdf --graph' from the command line.
   /// \param[in] _graphType Graph type.

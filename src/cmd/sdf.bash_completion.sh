@@ -26,6 +26,7 @@ GZ_SDF_COMPLETION_LIST="
   -p --print
   -g --graph
   --inertial-stats
+  --warnings-policy
   -h --help
   --force-version
   --versions

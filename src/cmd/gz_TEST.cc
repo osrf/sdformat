@@ -120,6 +120,41 @@ TEST(checkUnrecognizedElements, SDF)
 }
 
 /////////////////////////////////////////////////
+TEST(warningsPolicy, SDF)
+{
+  const auto path = sdf::testing::TestFile("sdf", "warnings_policy.sdf");
+  const std::string warning =
+      "Inertial was used with auto=true for the link named compound_link";
+
+  // Preserve today's default: warnings are printed and parsing succeeds.
+  std::string output =
+      custom_exec_str(GzCommand() + " sdf -k " + path + SdfVersion());
+  EXPECT_PRED2(sdf::testing::contains, output, warning);
+  EXPECT_PRED2(sdf::testing::contains, output, "Valid.");
+
+  // ERR promotes the warning into the returned Errors collection, so check
+  // fails before printing Valid.
+  output = custom_exec_str(GzCommand() + " sdf -k " + path +
+      " --warnings-policy err" + SdfVersion());
+  EXPECT_PRED2(sdf::testing::contains, output, warning);
+  EXPECT_PRED2(sdf::testing::notContains, output, "Valid.");
+
+  // LOG keeps the parse successful but moves the warning to debug output.
+  output = custom_exec_str(GzCommand() + " sdf -k " + path +
+      " --warnings-policy log" + SdfVersion());
+  EXPECT_PRED2(sdf::testing::notContains, output, warning);
+  EXPECT_PRED2(sdf::testing::contains, output, "Valid.");
+
+  // Print uses the same parser policy rather than a separate/default config.
+  output = custom_exec_str(GzCommand() + " sdf -p " + path +
+      " --warnings-policy log" + SdfVersion());
+  EXPECT_PRED2(sdf::testing::notContains, output, warning);
+  EXPECT_PRED2(sdf::testing::contains, output,
+               "<model name='compound_model'>");
+}
+
+
+/////////////////////////////////////////////////
 TEST(check, SDF)
 {
   // Check a good SDF file
